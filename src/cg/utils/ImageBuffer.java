@@ -10,65 +10,65 @@ import cg.exceptions.InvalidImagePathExeption;
 
 
 public class ImageBuffer {
-	
+
 	protected int width, height;
 	protected int[][] data;
-	
+
 	public ImageBuffer(int width, int height) {
 		super();
 		this.width = width;
 		this.height = height;
-		
-		this.data = new int[width][height];
+
+		data = new int[width][height];
 	}
-	
+
 	public ImageBuffer(File f){
 		try {
 			BufferedImage bi = ImageIO.read(f);
-			this.width = bi.getWidth();
-			this.height = bi.getHeight();
-			this.data = new int[this.width][this.height];
+			width = bi.getWidth();
+			height = bi.getHeight();
+			data = new int[width][height];
 			this.setImageData(bi);
 		} catch (IOException e) {
 			System.err.println("Image: " + f.getAbsolutePath() + " does not exist!");
 			throw new InvalidImagePathExeption();
 		}
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}
-	
+
 	public int getHeight() {
 		return height;
 	}
 
 	public void setRgbColor(int x, int y, int rgb) {
-		
+
 		data[x][y] = rgb;
 	}
-	
+
 	public int getRgbColor(int x, int y) {
-		
+
 		return data[x][y];
 	}
 
 	public int[][] getImageData() {
-		return this.data;
+		return data;
 	}
 
 	public void setImageData(BufferedImage bi) {
-		for (int i = 0; i < this.width; i++) {
-			for (int j = 0; j < this.height; j++) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
 				data[i][j] = bi.getRGB(i, j);
 			}
 		}
 	}
-	
+
 	public Color getTextureColor(float x, float y) {
 		// retrieve a pixel color for a texture, using bicubic filtering
-		x = x < 0 ? x - (int) x + 1 : x - (int) x;
-        y = y < 0 ? y - (int) y + 1 : y - (int) y;
+		x = x < 0.0f ? x - (int) x + 1.0f : x - (int) x;
+        y = y < 0.0f ? y - (int) y + 1.0f : y - (int) y;
         float dx = x * (width - 1);
         float dy = y * (height - 1);
         int ix0 = (int) dx;
