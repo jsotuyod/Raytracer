@@ -22,22 +22,22 @@ the project builds with ant, and is used from the command line. It has a nice he
 
 Non the less, I'll include it here:
 
-> usage: raytracing [-benchmark <N>] [-cores <N>] [-dof <T>] [-gui] -i
->        <filename> [-o <filename>] [-p <N>] [-progress] [-show] [-time]
->  -benchmark <N>   Will render N times and show total and average times
->  -cores <N>       Parallelize in N cores (not implemented yet)
->  -dof <T>         Use Depth of Field. T specifies lens size (in scene
->                   measures) (not implemented)
->  -gui             Use GUI for entering parameters (not implemented)
->  -i <filename>    Scene file to use in Sunflow format
->  -o <filename>    File in which to save the render
->  -p <N>           Use penumbra. N specifies processing limit amount
->  -progress        Show rendering progress
->  -show            Show image after program finishes
->  -time            Shows total rendering time
+	usage: raytracing [-benchmark <N>] [-cores <N>] [-dof <T>] [-gui] -i
+	        <filename> [-o <filename>] [-p <N>] [-progress] [-show] [-time]
+	 -benchmark <N>   Will render N times and show total and average times
+	 -cores <N>       Parallelize in N cores (not implemented yet)
+	 -dof <T>         Use Depth of Field. T specifies lens size (in scene
+	                  measures) (not implemented)
+	 -gui             Use GUI for entering parameters (not implemented)
+	 -i <filename>    Scene file to use in Sunflow format
+	 -o <filename>    File in which to save the render
+	 -p <N>           Use penumbra. N specifies processing limit amount
+	 -progress        Show rendering progress
+	 -show            Show image after program finishes
+	 -time            Shows total rendering time
 
 A sample usage:
 
-> java -jar raytracing.jar -i SCTestFiles/sunflow/aliens_shiny_sf.sc -time -show -benchmark 10 -cores 2
+	java -jar raytracing.jar -i SCTestFiles/sunflow/aliens_shiny_sf.sc -time -show -benchmark 10 -cores 2
 
 This will render 10 times the aliens scene from Sunflow, using 2 threads, showing the time of each iteration (and the final average), and once it's done a window will let you see the rendered image.
