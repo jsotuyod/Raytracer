@@ -1,0 +1,46 @@
+<project name="Filters" default="all" basedir=".">
+
+	<property name="src.dir"      		value="src"/>
+	<property name="bin.dir"      		value="bin"/>
+	<property name="lib.dir"      		value="lib"/>
+	<property name="TALK" 				value="true" />
+	<property name="commons-cli" 		value="${lib.dir}/commons-cli-1.2.jar" />
+
+	<path id="classpath">
+		<pathelement location="${commons-cli}"/>
+	</path>
+	
+	<target name="all" depends="clean, compile, jar" description="Clean all files and compile them again"/>
+
+	<target name="clean" description="Clean binary files">
+		<delete verbose="${TALK}">
+			<fileset dir="${bin.dir}" includes="**/*class"/>
+		</delete>
+	</target>
+	
+	<target name="compile" description="Compile Java sources">
+
+		<mkdir dir="bin"/>
+      	<javac srcdir="${src.dir}" destdir="${bin.dir}" target="1.6" debug="true" sourcepath="${src.dir}">
+	      	<classpath id="classpath">
+	      		<pathelement location="${commons-cli}"/>
+	      	</classpath>
+	      
+	    </javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+		<exec dir="${bin.dir}" executable="jar">
+		 	<arg line="xf"/>
+		    <arg value="../${commons-cli}"/>
+		</exec>
+			
+		<jar destfile="raytracing.jar">
+		    <fileset dir="${bin.dir}"/>
+				<manifest>
+					<attribute name="Main-Class" value="cg.main.Run" />
+					<attribute name="Class-Path" value="${commons-cli}"/>
+				</manifest>
+		</jar>
+	</target>
+</project>
