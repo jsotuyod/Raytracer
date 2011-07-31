@@ -71,8 +71,8 @@ public class SAHKDTree implements SceneTree {
 		minIndex = maxIndex = 0;
 
 		// Try X axis
-		y = max.y - min.y;
-		z = max.z - min.z;
+		y = Math.abs(max.y - min.y);
+		z = Math.abs(max.z - min.z);
 
 		if ( lastIndexMinX < 0 ) {
 			curMin = Float.POSITIVE_INFINITY;
@@ -90,10 +90,10 @@ public class SAHKDTree implements SceneTree {
 			splitPoint = Math.min(curMin, curMax);
 
 			// Compute the cost of splitting here
-			x = splitPoint - min.x;
+			x = Math.abs(splitPoint - min.x);
 			leftArea = 2.0f * ( x * y + y * z + z * x );
 
-			x = max.x - splitPoint;
+			x = Math.abs(max.x - splitPoint);
 			rightArea = 2.0f * ( x * y + y * z + z * x );
 
 			splitCost = COST_TRAVERSAL + COST_INTERSECTION * (leftArea * leftCount + rightArea * rightCount);
@@ -171,8 +171,8 @@ public class SAHKDTree implements SceneTree {
 		minIndex = maxIndex = 0;
 
 		// Try Y axis
-		x = max.x - min.x;
-		z = max.z - min.z;
+		x = Math.abs(max.x - min.x);
+		z = Math.abs(max.z - min.z);
 
 		if ( lastIndexMinY < 0 ) {
 			curMin = Float.POSITIVE_INFINITY;
@@ -190,10 +190,10 @@ public class SAHKDTree implements SceneTree {
 			splitPoint = Math.min(curMin, curMax);
 
 			// Compute the cost of splitting here
-			y = splitPoint - min.y;
+			y = Math.abs(splitPoint - min.y);
 			leftArea = 2.0f * ( x * y + y * z + z * x );
 
-			y = max.y - splitPoint;
+			y = Math.abs(max.y - splitPoint);
 			rightArea = 2.0f * ( x * y + y * z + z * x );
 
 			splitCost = COST_TRAVERSAL + COST_INTERSECTION * (leftArea * leftCount + rightArea * rightCount);
@@ -271,8 +271,8 @@ public class SAHKDTree implements SceneTree {
 		minIndex = maxIndex = 0;
 
 		// Try Z axis
-		x = max.x - min.x;
-		y = max.y - min.y;
+		x = Math.abs(max.x - min.x);
+		y = Math.abs(max.y - min.y);
 
 		if ( lastIndexMinZ < 0 ) {
 			curMin = Float.POSITIVE_INFINITY;
@@ -290,10 +290,10 @@ public class SAHKDTree implements SceneTree {
 			splitPoint = Math.min(curMin, curMax);
 
 			// Compute the cost of splitting here
-			z = splitPoint - min.z;
+			z = Math.abs(splitPoint - min.z);
 			leftArea = 2.0f * ( x * y + y * z + z * x );
 
-			z = max.z - splitPoint;
+			z = Math.abs(max.z - splitPoint);
 			rightArea = 2.0f * ( x * y + y * z + z * x );
 
 			splitCost = COST_TRAVERSAL + COST_INTERSECTION * (leftArea * leftCount + rightArea * rightCount);
@@ -472,13 +472,13 @@ public class SAHKDTree implements SceneTree {
 
 		switch (splitAxis) {
 		case X:
-			return new SAHKDInternalNodeXAxis(bestSplitPoint, leftNode, rightNode );
+			return new SAHKDInternalNodeXAxis(bestSplitPoint, leftNode, rightNode);
 
 		case Y:
-			return new SAHKDInternalNodeYAxis(bestSplitPoint, leftNode, rightNode );
+			return new SAHKDInternalNodeYAxis(bestSplitPoint, leftNode, rightNode);
 
 		case Z:
-			return new SAHKDInternalNodeZAxis(bestSplitPoint, leftNode, rightNode );
+			return new SAHKDInternalNodeZAxis(bestSplitPoint, leftNode, rightNode);
 		}
 
 		// Should never happen...
