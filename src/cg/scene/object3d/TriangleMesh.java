@@ -29,13 +29,13 @@ public class TriangleMesh implements Object3D {
 		NONE, VERTEX, FACEVARYING
 	}
 
-	protected SceneTree triangles;
-	protected Shader shader;
-	protected BoundingVolume bb;
+	private SceneTree triangles;
+	private Shader shader;
+	private BoundingVolume bb;
 
-	protected HashMap<Long, Collision> collisionMap;
+	private HashMap<Long, Collision> collisionMap;
 
-	protected Point3D pos;
+	private Point3D pos;
 
 	public TriangleMesh(Point3D[] points, int[] vertices, Shader shader,
 			UVType uvType, float[] uvs, NormalType normalType, float[] normals, Matrix4 transform) {

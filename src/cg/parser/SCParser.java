@@ -43,7 +43,7 @@ import cg.utils.ImageBuffer;
  * file format.
  */
 public class SCParser {
-	
+
     private Parser p;
 //    private int numLightSamples;
     private Map<String, Shader> colorShadersMap = new HashMap<String, Shader>();
@@ -52,12 +52,12 @@ public class SCParser {
     private Set<String> parsedFiles = new HashSet<String>();
     private List<String>includeSearchPath = new LinkedList<String>();
     private List<String>textureSearchPath = new LinkedList<String>();
-    
+
     private boolean debug = true;
     private Scene scene;
-    
+
     public Scene parseAllFiles(String fileName){
-    	this.scene = new Scene();
+    	scene = new Scene();
     	LightManager lm = new LightManager();
     	scene.setLightManager(lm);
 
@@ -69,24 +69,27 @@ public class SCParser {
 
     	return scene;
     }
-    
+
     private boolean parse(String filename, Scene scene) {
     	String parentDirectory = new File(filename).getParent();
     	String localDir = new File(filename).getAbsolutePath();
 //        numLightSamples = 1;
-    	if(debug)
-        	System.out.println("\nPARSING: " + localDir + "... ");
+    	if(debug) {
+			System.out.println("\nPARSING: " + localDir + "... ");
+		}
         try {
             p = new Parser(localDir );
             while (true) {
                 String token = p.getNextToken();
-                if (token == null)
-                    break;
+                if (token == null) {
+					break;
+				}
                 if (token.equals("image")) {
-                    if(debug)
-                    	System.out.println("Reading image settings ...");
+                    if(debug) {
+						System.out.println("Reading image settings ...");
+					}
                     parseImageBlock(scene);
-                } 
+                }
 //                else if (token.equals("background")) {
 //                    UI.printInfo(Module.API, "Reading background ...");
 //                    parseBackgroundBlock(api);
@@ -120,48 +123,51 @@ public class SCParser {
 //                } else if (token.equals("trace-depths")) {
 //                    UI.printInfo(Module.API, "Reading trace depths ...");
 //                    parseTraceBlock(api);
-//                } else 
-                	
+//                } else
+
                 else if (token.equals("camera")) {
                     parseCamera(scene);
-                } 
-                
+                }
+
                 else if (token.equals("shader")) {
-                    if (!parseShader(parentDirectory))
-                        return false;
-                } 
+                    if (!parseShader(parentDirectory)) {
+						return false;
+					}
+                }
 //                else if (token.equals("modifier")) {
 //                    if (!parseModifier(api))
 //                        return false;
 //                } else if (token.equals("override")) {
 //                    api.shaderOverride(p.getNextToken(), p.getNextBoolean());
-//                } else 
-                
+//                } else
+
                 else if (token.equals("object")) {
                     parseObjectBlock(scene);
-                } 
-                
+                }
+
 //                else if (token.equals("instance")) {
 //                    parseInstanceBlock(api);
-//                } 
+//                }
                 else if (token.equals("light")) {
                     parseLightBlock(scene);
-                } 
-                
+                }
+
                 else if (token.equals("texturepath")) {
                     String path = p.getNextToken();
-                    if (!new File(path).isAbsolute())
-                        path = new File (parentDirectory + File.separator + path).getCanonicalPath();
+                    if (!new File(path).isAbsolute()) {
+						path = new File (parentDirectory + File.separator + path).getCanonicalPath();
+					}
                     textureSearchPath.add(path);
                 } else if (token.equals("includepath")) {
                     String path = p.getNextToken();
-                    if (!new File(path).isAbsolute())
-                        path = new File (parentDirectory + File.separator + path).getCanonicalPath();
+                    if (!new File(path).isAbsolute()) {
+						path = new File (parentDirectory + File.separator + path).getCanonicalPath();
+					}
                     includeSearchPath.add(path);
-                } 
+                }
                 else if (token.equals("include")) {
                     String fileName = p.getNextToken();
-                    
+
                     if (! new File(fileName).isAbsolute()) {
                     	if (new File(parentDirectory + File.separatorChar + fileName).isFile()) {
                     		fileName = new File (parentDirectory + File.separatorChar + fileName).getCanonicalPath();
@@ -175,15 +181,16 @@ public class SCParser {
                     		}
                     	}
                     }
-                    
+
                     if ( !new File(fileName).isFile()) {
                     	System.err.println (fileName + " doesn't exist. Ignoring.");
                     	continue;
                     }
-                    
-                    if(debug)
-                    	System.out.println("Including: " + fileName +" ...");
-                    
+
+                    if(debug) {
+						System.out.println("Including: " + fileName +" ...");
+					}
+
                     if (parsedFiles.contains(fileName)) {
                     	System.err.println ("Ignoring duplicate include");
                     }
@@ -196,7 +203,7 @@ public class SCParser {
                     	}
                     	p = pBak;
                     }
-                } 
+                }
                 else{
                 	consumeUnrecognizedBlock(token, 0);
                 }
@@ -216,30 +223,36 @@ public class SCParser {
         	System.out.println("Color Shaders: " + colorShadersMap);
         	System.out.println("Textures shaders: " + texturesShadersMap);
         }
-        if(debug)
-        	System.out.println("Done parsing...");
- 
+        if(debug) {
+			System.out.println("Done parsing...");
+		}
+
         return true;
     }
 
 	private void consumeUnrecognizedBlock(String token, int initParenBalance) throws IOException{
     	int parenBalance = initParenBalance;
-    	if(debug)
-    		System.out.println("[BegUnrecBlk] " + token);
+    	if(debug) {
+			System.out.println("[BegUnrecBlk] " + token);
+		}
 
     	do{
     		token = p.getNextToken();
     		if(token != null){
-    			if(debug)
-    				System.out.println(token);
-    			if(token.equals("{"))
-    				parenBalance++;
-    			if(token.equals("}"))
-    				parenBalance--;
+    			if(debug) {
+					System.out.println(token);
+				}
+    			if(token.equals("{")) {
+					parenBalance++;
+				}
+    			if(token.equals("}")) {
+					parenBalance--;
+				}
     		}
     	}while(token != null && parenBalance != 0);
-    	if(debug)
-    		System.out.println("[FinUnrecBlk]");
+    	if(debug) {
+			System.out.println("[FinUnrecBlk]");
+		}
     }
 
     private void parseImageBlock(Scene scene) throws IOException, ParserException {
@@ -257,15 +270,19 @@ public class SCParser {
         	minAA = p.getNextInt();
         	maxAA = p.getNextInt();
         }
-        if (p.peekNextToken("samples"))
-        	samples = p.getNextInt();
-        if (p.peekNextToken("contrast"))
-        	contrast = p.getNextFloat();
-        if (p.peekNextToken("filter"))
-        	filter = p.getNextToken();
-        if (p.peekNextToken("jitter"))
-        	jitter = p.getNextBoolean();
-        
+        if (p.peekNextToken("samples")) {
+			samples = p.getNextInt();
+		}
+        if (p.peekNextToken("contrast")) {
+			contrast = p.getNextFloat();
+		}
+        if (p.peekNextToken("filter")) {
+			filter = p.getNextToken();
+		}
+        if (p.peekNextToken("jitter")) {
+			jitter = p.getNextBoolean();
+		}
+
         if (p.peekNextToken("show-aa")) {
             System.err.println("Deprecated: show-aa ignored");
             p.getNextBoolean();
@@ -459,27 +476,28 @@ public class SCParser {
         //always pinhole
         p.checkNextToken("type");
         String type = p.getNextToken();
-        if(debug)
-        	System.out.println("Reading " + type + " camera ...");
+        if(debug) {
+			System.out.println("Reading " + type + " camera ...");
+		}
 //        parseCameraTransform(api);
 //        String name = api.getUniqueName("camera");
         if (type.equals("pinhole")) {
-        	
+
         	p.checkNextToken("eye");
         	Point3D pos = parsePoint();
-            
+
             p.checkNextToken("target");
             Point3D target = parsePoint();
-            
+
             p.checkNextToken("up");
             Vector3D up = parseVector();
-            
+
             p.checkNextToken("fov");
             float fov =  p.getNextFloat();
             p.checkNextToken("aspect");
             float aspect = p.getNextFloat();
             scene.setCamera(new Camera(pos, target, up, fov, aspect));
-        } 
+        }
 //        else if (type.equals("thinlens")) {
 //            p.checkNextToken("fov");
 //            api.parameter("fov", p.getNextFloat());
@@ -500,7 +518,7 @@ public class SCParser {
 //        } else if (type.equals("fisheye")) {
 //            // no extra arguments
 //            api.camera(name, new FisheyeLens());
-//        } 
+//        }
         else {
             System.err.println("Unrecognized camera type: " + p.getNextToken());
             p.checkNextToken("}");
@@ -545,21 +563,22 @@ public class SCParser {
         p.checkNextToken("{");
         p.checkNextToken("name");
         String name = p.getNextToken();
-        if(debug)
-        	System.out.println("Reading shader: " + name + " ...");
+        if(debug) {
+			System.out.println("Reading shader: " + name + " ...");
+		}
         p.checkNextToken("type");
         String type;
-        
+
         if (p.peekNextToken("diffuse")) {
         	type = "diffuse";
             if (p.peekNextToken("diff")) {
             	Color colorRGB = parseColor();
-            	shader = new DiffuseShader(name, type, colorRGB, this.scene.getLightManager());
+            	shader = new DiffuseShader(name, type, colorRGB, scene.getLightManager());
                 colorShadersMap.put(name, shader);
             }
             else if (p.peekNextToken("texture")) {
             	String textureFilePath = p.getNextToken();
-            	
+
                 if (! new File(textureFilePath).isAbsolute()) {
                 	if (new File (parentDirectory + File.separatorChar + textureFilePath).isFile()) {
                 		textureFilePath = parentDirectory + File.separatorChar + textureFilePath;
@@ -573,23 +592,23 @@ public class SCParser {
                 		}
                 	}
                 }
-                
+
                 if ( !new File(textureFilePath).isFile()) {
                 	System.err.println (textureFilePath + " doesn't exist. Aborting.");
                 	System.exit(-1);
                 }
-                
+
             	texturesShadersMap.put(name, new ImageBuffer(new File(textureFilePath).getAbsoluteFile()));
-            	shader = new DiffuseShaderTexture(name, type, textureFilePath ,this.scene.getLightManager());
-            } 
-            else
-                System.err.println("Unrecognized option in diffuse shader block: " + p.getNextToken());
+            	shader = new DiffuseShaderTexture(name, type, textureFilePath ,scene.getLightManager());
+            } else {
+				System.err.println("Unrecognized option in diffuse shader block: " + p.getNextToken());
+			}
         }
         else if (p.peekNextToken("phong")) {
             String textureFilePath = null;
             Color colorRGB = null;
             type = "phong";
-            
+
             if (p.peekNextToken("texture")){
             	textureFilePath = p.getNextToken();
 //            	texturesShadersMap.put(name, new ImageBuffer(new File(textureFilePath).getAbsoluteFile()));
@@ -601,17 +620,17 @@ public class SCParser {
             p.checkNextToken("spec");
             Color colorRGBSpec = parseColor();
             float specPower = p.getNextFloat();
-            
+
             p.checkNextToken("samples");
             int samples = p.getNextInt();
 
             if (textureFilePath == null){
-//            	shader = new PhongShaderTexture(name, type, textureFilePath, 
+//            	shader = new PhongShaderTexture(name, type, textureFilePath,
 //            			colorRGBSpec, specPower, samples,this.scene.getLightManager());
-            	shader = new DiffuseShader(name, type, colorRGB, this.scene.getLightManager());
+            	shader = new DiffuseShader(name, type, colorRGB, scene.getLightManager());
                 colorShadersMap.put(name, shader);
             }else{
-//            	shader = new PhongShader(name, type, colorRGB, colorRGBSpec, 
+//            	shader = new PhongShader(name, type, colorRGB, colorRGBSpec,
 //            			specPower, samples, this.scene.getLightManager());
 //            	colorShadersMap.put(name, shader);
 
@@ -637,7 +656,7 @@ public class SCParser {
             	}
 
             	texturesShadersMap.put(name, new ImageBuffer(new File(textureFilePath).getAbsoluteFile()));
-            	shader = new DiffuseShaderTexture(name, type, textureFilePath ,this.scene.getLightManager());
+            	shader = new DiffuseShaderTexture(name, type, textureFilePath ,scene.getLightManager());
             }
         } else if (p.peekNextToken("amb-occ") || p.peekNextToken("amb-occ2")) {
 //            String tex = null;
@@ -661,7 +680,7 @@ public class SCParser {
             p.checkNextToken("refl");
             type = "mirror";
             Color colorRGB = parseColor();
-            shader = new MirrorShader(name, type, colorRGB, this.scene.getLightManager());
+            shader = new MirrorShader(name, type, colorRGB);
             colorShadersMap.put(name, shader);
         } else if (p.peekNextToken("glass")) {
         	type = "glass";
@@ -677,7 +696,7 @@ public class SCParser {
             if (p.peekNextToken("absorbtion.color")) {
             	absColor = parseColor();
             }
-            shader = new GlassShader(name, type, eta, colorRGB, absDist, absColor, this.scene.getLightManager());
+            shader = new GlassShader(name, type, eta, colorRGB, absDist, absColor);
             colorShadersMap.put(name, shader);
         } else if (p.peekNextToken("shiny")) {
         	type = "shiny";
@@ -696,7 +715,7 @@ public class SCParser {
 //            api.parameter("shiny", p.getNextFloat());
             if (tex == null) {
 //                api.shader(name, new ShinyDiffuseShader());
-            	shader = new ShinyShader(name, type, c, refl, this.scene.getLightManager());
+            	shader = new ShinyShader(name, type, c, refl, scene.getLightManager());
             } else {
 //                api.shader(name, new TexturedShinyDiffuseShader());
             }
@@ -738,7 +757,7 @@ public class SCParser {
             // backwards compatibility -- peek only
             p.peekNextToken("color");
             type = "constant";
-            shader = new ConstantShader(name, type, parseColor(), this.scene.getLightManager());
+            shader = new ConstantShader(name, type, parseColor(), scene.getLightManager());
             colorShadersMap.put(name, shader);
         } else if (p.peekNextToken("janino")) {
             p.getNextCodeBlock();
@@ -810,12 +829,13 @@ public class SCParser {
 //                api.parameter("samples", p.getNextInt());
             }
 //            api.shader(name, new UberShader());
-        } else
-            System.err.println("Unrecognized shader type: " + p.getNextToken());
+        } else {
+			System.err.println("Unrecognized shader type: " + p.getNextToken());
+		}
         p.checkNextToken("}");
-        
+
         if(shader != null){
-        	this.colorShadersMap.put(name, shader);
+        	colorShadersMap.put(name, shader);
         }
         return true;
     }
@@ -849,7 +869,7 @@ public class SCParser {
         Matrix4 transform = null;
         String name = null;
         String actualShader = null;
-        
+
         if (p.peekNextToken("noinstance")) {
             // this indicates that the geometry is to be created, but not
             // instanced into the scene
@@ -858,64 +878,70 @@ public class SCParser {
             // these are the parameters to be passed to the instance
             if (p.peekNextToken("shaders")) {
                 int n = p.getNextInt();
-                for (int i = 0; i < n; i++)
-                    p.getNextToken();
+                for (int i = 0; i < n; i++) {
+					p.getNextToken();
+				}
             } else {
                 p.checkNextToken("shader");
                 actualShader = p.getNextToken();
             }
             if (p.peekNextToken("modifiers")) {
                 int n = p.getNextInt();
-                for (int i = 0; i < n; i++)
-                    p.getNextToken();
+                for (int i = 0; i < n; i++) {
+					p.getNextToken();
+				}
             } else if (p.peekNextToken("modifier")){
             	p.getNextToken();
             }
-            if (p.peekNextToken("transform"))
-                transform = parseMatrix();
+            if (p.peekNextToken("transform")) {
+				transform = parseMatrix();
+			}
         }
-        if (p.peekNextToken("accel"))
-            p.getNextToken();
-        
+        if (p.peekNextToken("accel")) {
+			p.getNextToken();
+		}
+
         p.checkNextToken("type");
         String type = p.getNextToken();
-        
-        if (p.peekNextToken("name"))
-            name = p.getNextToken();
-        
+
+        if (p.peekNextToken("name")) {
+			name = p.getNextToken();
+		}
+
 //        else
 //            name = api.getUniqueName(type);
         if (type.equals("mesh")) {
-        	if(debug)
-        		System.out.println("Reading deprecated mesh object : " + name + " ...");
-        	
+        	if(debug) {
+				System.out.println("Reading deprecated mesh object : " + name + " ...");
+			}
+
             int numVertices = p.getNextInt();
             int numTriangles = p.getNextInt();
-            
+
             Point3D[] points = new Point3D[numVertices];
             float[] pointCoords = new float[3];
             float[] normals = new float[numVertices * 3];
             float[] uvs = new float[numVertices * 2];
-            
+
             for (int i = 0; i < numVertices; i++) {
                 p.checkNextToken("v");
                 pointCoords[0] = p.getNextFloat();
                 pointCoords[1] = p.getNextFloat();
                 pointCoords[2] = p.getNextFloat();
-                
+
                 points[i] = new Point3D(pointCoords[0], pointCoords[1], pointCoords[2]);
-                
+
                 if ( transform != null ) {
                 	points[i] = transform.transform(points[i]);
                 }
-                
+
                 normals[3 * i + 0] = p.getNextFloat();
                 normals[3 * i + 1] = p.getNextFloat();
                 normals[3 * i + 2] = p.getNextFloat();
                 uvs[2 * i + 0] = p.getNextFloat();
                 uvs[2 * i + 1] = p.getNextFloat();
             }
-            
+
             int[] triangles = new int[numTriangles * 3];
             for (int i = 0; i < numTriangles; i++) {
                 p.checkNextToken("t");
@@ -923,7 +949,7 @@ public class SCParser {
                 triangles[i * 3 + 1] = p.getNextInt();
                 triangles[i * 3 + 2] = p.getNextInt();
             }
-            
+
             scene.add(new TriangleMesh(points, triangles, colorShadersMap.get(actualShader), UVType.VERTEX, uvs, NormalType.VERTEX, normals, transform));
         }
 //        else if (type.equals("flat-mesh")) {
@@ -958,16 +984,17 @@ public class SCParser {
 //            api.geometry(name, new TriangleMesh());
 //        }
         else if (type.equals("box")) {
-        	if(debug)
-        		System.out.println("Reading box ...");
+        	if(debug) {
+				System.out.println("Reading box ...");
+			}
 
         	if ( transform == null ) {
         		transform = Matrix4.identity();
         	}
-        	
+
         	// This will be only translated and serve as reference for normals
         	Point3D ref = transform.transform(new Point3D(0, 0, 0));
-        	
+
             scene.add(new Box(transform.transform(new Point3D(-1,-1,-1)),
             		transform.transform(new Point3D(1,1,1)),
             		transform.transform(new Point3D(-1,-1,1)),
@@ -979,11 +1006,12 @@ public class SCParser {
             		transform.transform(new Vector3D(0,1,0)).substract(new Vector3D(ref)).normalize(),
             		transform.transform(new Vector3D(1,0,0)).substract(new Vector3D(ref)).normalize(),
             		colorShadersMap.get(actualShader)));
-            
+
         }else if (type.equals("sphere")) {
-            if(debug)
-            	System.out.println("Reading sphere ...");
-            
+            if(debug) {
+				System.out.println("Reading sphere ...");
+			}
+
             Point3D c;
             float radius;
 
@@ -991,26 +1019,26 @@ public class SCParser {
                 // legacy method of specifying transformation for spheres
                 p.checkNextToken("c");
                 c = parsePoint();
-                
+
                 p.checkNextToken("r");
                 radius = p.getNextFloat();
-                
+
                 noInstance = true; // disable future auto-instancing because
                 // instance has already been created
             } else {
             	// Create a sphere at 0,0,0 with radius 1 and transform it
             	c = new Point3D(0,0,0);
             	Vector3D r = new Vector3D(1,0,0);
-            	
+
             	c = transform.transform(c);
             	r = transform.transform(r).substract(new Vector3D(c));
-            	
+
             	radius = (float) Math.sqrt(r.dotProduct(r));	// Just get radius, ignoring rotations if any
             }
-            
+
             scene.add(new Sphere(c , radius, colorShadersMap.get(actualShader), transform));
-        } 
-        
+        }
+
 //        else if (type.equals("banchoff")) {
 //            UI.printInfo(Module.API, "Reading banchoff ...");
 //            api.geometry(name, new BanchoffSurface());
@@ -1020,22 +1048,23 @@ public class SCParser {
 //            api.parameter("radiusInner", p.getNextFloat());
 //            api.parameter("radiusOuter", p.getNextFloat());
 //            api.geometry(name, new Torus());
-//        } 
+//        }
         else if (type.equals("plane")) {
-            if(debug)
-            	System.out.println("Reading plane ...");
+            if(debug) {
+				System.out.println("Reading plane ...");
+			}
 
             if ( transform == null ) {
 	            p.checkNextToken("p");
-	            
+
 	            Point3D p1 = parsePoint();
-	            
+
 	            if (p.peekNextToken("n")) {
 	                Vector3D n = parseVector();
 	                scene.add(new Plane(p1, n, colorShadersMap.get(actualShader)));
 	            } else {
 	                p.checkNextToken("p");
-	                Point3D p2 = parsePoint(); 
+	                Point3D p2 = parsePoint();
 	                p.checkNextToken("p");
 	                Point3D p3 = parsePoint();
 	                scene.add(new Plane(p1, p2, p3, colorShadersMap.get(actualShader)));
@@ -1043,10 +1072,10 @@ public class SCParser {
             } else {
             	Point3D p1 = transform.transform(new Point3D(0,0,0));
             	Vector3D n = transform.transform(new Vector3D(0,1,0)).substract(new Vector3D(p1)).normalize();
-            	
+
                 scene.add(new Plane(p1, n, colorShadersMap.get(actualShader)));
             }
-        } 
+        }
 //            else if (type.equals("cornellbox")) {
 //            UI.printInfo(Module.API, "Reading cornell box ...");
 //            if (transform != null)
@@ -1073,7 +1102,7 @@ public class SCParser {
 //            noInstance = true; // instancing is handled natively by the init
 //            // method
 //        }
-        
+
         else if (type.equals("generic-mesh")) {
         	if(debug) {
         		System.out.println("Reading generic mesh... ");
@@ -1085,19 +1114,19 @@ public class SCParser {
             float[] uvVertex = null, normalsVertex = null;
             UVType uvType;
             NormalType normalType;
-            
+
             // transform all points
             if ( transform != null ) {
             	for ( int i = 0; i < np; i++ ) {
             		points[i] = transform.transform(points[i]);
             	}
             }
-            
+
             // parse triangle indices
             p.checkNextToken("triangles");
             int nt = p.getNextInt();
             int[] triangles = parseIntArray(nt * 3);
-            
+
             // parse normals
             p.checkNextToken("normals");
             if (p.peekNextToken("vertex")){
@@ -1112,7 +1141,7 @@ public class SCParser {
                 p.checkNextToken("none");
                 normalType = NormalType.NONE;
             }
-            
+
             // parse texture coordinates
             p.checkNextToken("uvs");
             if (p.peekNextToken("vertex")){
@@ -1127,14 +1156,14 @@ public class SCParser {
                 p.checkNextToken("none");
                 uvType = UVType.NONE;
             }
-            
+
             if (p.peekNextToken("face_shaders")) {
             	parseIntArray(nt);
             }
 
             scene.add(new TriangleMesh(points, triangles, colorShadersMap.get(actualShader), uvType, uvVertex, normalType, normalsVertex, transform));
         }
-        
+
 //        else if (type.equals("hair")) {
 //            UI.printInfo(Module.API, "Reading hair curves: %s ... ", name);
 //            p.checkNextToken("segments");
@@ -1268,10 +1297,11 @@ public class SCParser {
 //            if (p.peekNextToken("smooth"))
 //                api.parameter("smooth", p.getNextBoolean());
 //            api.geometry(name, (Tesselatable) new BezierMesh());
-//        } 
+//        }
         else {
-        	if(debug)
-        		System.out.println("Unrecognized object type: " );
+        	if(debug) {
+				System.out.println("Unrecognized object type: " );
+			}
             consumeUnrecognizedBlock(p.getNextToken(), 1);
             return;
 //            noInstance = true;
@@ -1329,17 +1359,19 @@ public class SCParser {
             System.err.println( "Deprecated light type: mesh");
             p.checkNextToken("name");
             String name = p.getNextToken();
-            
-            if(debug)
-            	System.out.println( "Reading light mesh: " + name);
-            
+
+            if(debug) {
+				System.out.println( "Reading light mesh: " + name);
+			}
+
             p.checkNextToken("emit");
             parseColor();
-            
-            if (p.peekNextToken("samples"))
-            	p.getNextInt();
-            else
-            	System.err.println("Samples keyword not found");
+
+            if (p.peekNextToken("samples")) {
+				p.getNextInt();
+			} else {
+				System.err.println("Samples keyword not found");
+			}
 
             int numVertices = p.getNextInt();
             int numTriangles = p.getNextInt();
@@ -1385,12 +1417,12 @@ public class SCParser {
             }
             p.checkNextToken("p");
             Point3D pos = parsePoint();
-            
+
             if ( Run.getPenumbraCount() > 0 ) {
             	if ( debug ) {
             		System.out.println("Penumbra requested, using a spherical light instead of a point light.");
             	}
-            	
+
             	scene.add(new SphereLight(pow, pos, 1.0f, Run.getPenumbraCount() ));
             } else {
             	scene.add(new PointLight(pow, pos));
@@ -1399,51 +1431,53 @@ public class SCParser {
         	if(debug) {
         		System.out.println("Reading spherical light ...");
         	}
-        	
+
             p.checkNextToken("color");
             Color pow = parseColor();
-            
+
             p.checkNextToken("radiance");
             pow.mul(p.getNextFloat());
-            
+
             p.checkNextToken("center");
             Point3D pos = parsePoint();
-            
+
             p.checkNextToken("radius");
             float radius = p.getNextFloat();
-            
+
             p.checkNextToken("samples");
             int samples = p.getNextInt();
-            
+
             scene.add(new SphereLight( pow, pos, radius, samples ));
-        } 
+        }
         else if (p.peekNextToken("directional")) {
-        	if(debug)
-        		System.out.println("Reading directional light ...");
-        	
+        	if(debug) {
+				System.out.println("Reading directional light ...");
+			}
+
             p.checkNextToken("source");
             Point3D s = parsePoint();
-            
+
             p.checkNextToken("target");
             Point3D t = parsePoint();
-            
+
             p.checkNextToken("radius");
             float radius = p.getNextFloat();
-            
+
             p.checkNextToken("emit");
             Color e = parseColor();
-            
+
             if (p.peekNextToken("intensity")) {
                 float i = p.getNextFloat();
                 e.mul(i);
             } else {
                 System.err.println("Deprecated color specification - please use emit and intensity instead");
             }
-            
+
             scene.add(new DirectionalLight(e, s, new Vector3D(t.substract(s)), radius));
         } else if (p.peekNextToken("ibl")) {
-        	if(debug)
-            System.out.println("Reading image based light ...");
+        	if(debug) {
+				System.out.println("Reading image based light ...");
+			}
             p.checkNextToken("image");
             p.getNextToken();
             p.checkNextToken("center");
@@ -1452,18 +1486,21 @@ public class SCParser {
             parseVector();
             p.checkNextToken("lock");
             p.getNextBoolean();
-            if (p.peekNextToken("samples"))
-            	p.getNextInt();
-            else
-                System.err.println("Samples keyword not found");
+            if (p.peekNextToken("samples")) {
+				p.getNextInt();
+			}
+			else {
+				System.err.println("Samples keyword not found");
 //            api.parameter("samples", samples);
 //            ImageBasedLight ibl = new ImageBasedLight();
 //            ibl.init(api.getUniqueName("ibl"), api);
+			}
         } else if (p.peekNextToken("meshlight")) {
             p.checkNextToken("name");
             String name = p.getNextToken();
-            if(debug)
-            	System.out.println("Reading meshlight: " + name);
+            if(debug) {
+				System.out.println("Reading meshlight: " + name);
+			}
             p.checkNextToken("emit");
             parseColor();
             p.peekNextToken("radiance");
@@ -1512,7 +1549,7 @@ public class SCParser {
             p.getNextInt();
 //            SunSkyLight sunsky = new SunSkyLight();
 //            sunsky.init(api.getUniqueName("sunsky"), api);
-        } 
+        }
         else{
         	System.err.println( "Unrecognized object type: "+ p.getNextToken());
         }
@@ -1522,7 +1559,7 @@ public class SCParser {
     private Color parseColor() throws IOException, ParserException {
     	float r,g,b;
     	String space;
-    	
+
         if (p.peekNextToken("{")) {
             space = p.getNextToken();
             Color c = null;
@@ -1531,15 +1568,16 @@ public class SCParser {
                 g = p.getNextFloat();
                 b = p.getNextFloat();
                 c = new Color(r, g, b);
-                
+
                 c.toLinear();
             } else if (space.equals("sRGB linear")) {
                 r = p.getNextFloat();
                 g = p.getNextFloat();
                 b = p.getNextFloat();
                 c = new Color(r, g, b);
-            } else
-            	System.err.println("Unrecognized color space: " + space);
+            } else {
+				System.err.println("Unrecognized color space: " + space);
+			}
 
             p.checkNextToken("}");
             return c;
@@ -1567,25 +1605,28 @@ public class SCParser {
 
     private int[] parseIntArray(int size) throws IOException {
         int[] data = new int[size];
-        for (int i = 0; i < size; i++)
-            data[i] = p.getNextInt();
+        for (int i = 0; i < size; i++) {
+			data[i] = p.getNextInt();
+		}
         return data;
     }
 
     private float[] parseFloatArray(int size) throws IOException {
         float[] data = new float[size];
-        for (int i = 0; i < size; i++)
-            data[i] = p.getNextFloat();
+        for (int i = 0; i < size; i++) {
+			data[i] = p.getNextFloat();
+		}
         return data;
     }
-    
+
     private Point3D[] parsePointArray(int size) throws IOException {
         Point3D[] data = new Point3D[size];
-        for (int i = 0; i < size; i++)
-            data[i] = parsePoint();
+        for (int i = 0; i < size; i++) {
+			data[i] = parsePoint();
+		}
         return data;
     }
-    
+
     private Matrix4 parseMatrix() throws IOException, ParserException {
         if (p.peekNextToken("row")) {
             return new Matrix4(parseFloatArray(16), true);
@@ -1627,8 +1668,9 @@ public class SCParser {
                     float z = p.getNextFloat();
                     float angle = p.getNextFloat();
                     m = m.rotate(x, y, z, (float) Math.toRadians(angle));
-                } else
-                    System.err.println( "Unrecognized transformation type: " + p.getNextToken());
+                } else {
+					System.err.println( "Unrecognized transformation type: " + p.getNextToken());
+				}
             }
             return m;
         }

@@ -11,10 +11,11 @@ import cg.utils.Registry;
 
 public class PointLight implements Light {
 
-	protected Color color;
-	protected Point3D pos;
-	protected final static float FourPI = 4.0f * (float) Math.PI;
-	
+	private final static float FourPI = 4.0f * (float) Math.PI;
+
+	private final Color color;
+	private final Point3D pos;
+
 	public PointLight(Color color, Point3D pos) {
 		super();
 		this.color = color;
@@ -23,18 +24,18 @@ public class PointLight implements Light {
 
 	@Override
 	public ColorSample getColorSample(Collision collision) {
-		
-		Point3D p = collision.hitPoint;
-		Vector3D d = new Vector3D( p, pos );
-		
+
+		final Point3D p = collision.hitPoint;
+		final Vector3D d = new Vector3D( p, pos );
+
 		if (d.x * collision.normal.x + d.y * collision.normal.y + d.z * collision.normal.z > 0.0f) {
 			Color c = null;
-			float distanceSq = pos.getDistanceSquared(p);
-			
+			final float distanceSq = pos.getDistanceSquared(p);
+
 			// Check if there is something hiding the point
-			Ray r = new Ray(p, d.clone());
-			Collision test = Registry.getScene().castRay(r);
-			
+			final Ray r = new Ray(p, d.clone());
+			final Collision test = Registry.getScene().castRay(r);
+
 			if ( test != null && r.travelledDistance * r.travelledDistance < distanceSq ) {
 				c = new Color();
 			} else {
@@ -44,19 +45,14 @@ public class PointLight implements Light {
 				 *  1 / (4 * PI * r^2)
 				 */
 				float scale = 1.0f / (PointLight.FourPI * distanceSq);
-				
+
 				c = color.clone().mul( scale );
 			}
-			
+
 			return new ColorSample( c, c, d );
 		}
-		
+
 		// No light from the source reaches the collision point.
 		return null;
-	}
-
-	@Override
-	public void setColor(Color c) {
-		this.color = c;
 	}
 }

@@ -3,54 +3,31 @@ package cg.scene.shaders;
 import cg.math.Vector3D;
 import cg.raycasting.Collision;
 import cg.raycasting.Ray;
-import cg.scene.LightManager;
 import cg.utils.Color;
 
 public class GlassShader extends Shader {
-	protected float eta;
-	protected float ieta;
-	protected Color colorRGB;
-	protected float absDistance;
-	protected float iAbsDistance;
-	protected Color absColor;
-	protected Color oAbsColor;
-	protected LightManager lm;
+	private float eta;
+	private float ieta;
+	private Color colorRGB;
+	private float absDistance;
+	private float iAbsDistance;
+	private Color absColor;
+	private Color oAbsColor;
 
-	public GlassShader(String name, String type, float eta, Color colorRGB, 
-			float absDistance, Color colorAbs, LightManager lm) {
+	public GlassShader(String name, String type, float eta, Color colorRGB,
+			float absDistance, Color colorAbs) {
 		super(name, type);
 		this.absDistance = absDistance;
-		this.iAbsDistance = 1.0f / absDistance;
-		this.absColor = colorAbs;
-		
+		iAbsDistance = 1.0f / absDistance;
+		absColor = colorAbs;
+
 		if (absColor != null) {
-			this.oAbsColor = absColor.clone().opposite();
+			oAbsColor = absColor.clone().opposite();
 		}
-		
+
 		this.colorRGB = colorRGB;
 		this.eta = eta;
-		this.ieta = 1.0f / eta;
-		this.lm = lm;
-	}
-	
-	public float getEta() {
-		return eta;
-	}
-
-	public Color getColorRGB() {
-		return colorRGB;
-	}
-
-	public float getAbsDistance() {
-		return absDistance;
-	}
-
-	public Color getColorAbs() {
-		return absColor;
-	}
-
-	public LightManager getLm() {
-		return lm;
+		ieta = 1.0f / eta;
 	}
 
 	@Override
@@ -106,10 +83,10 @@ public class GlassShader extends Shader {
         // refracted ray
         Color ret = new Color();
         if (!tir) {
-            ret.madd(kt, traceRefraction(new Ray(collision.hitPoint.translateNew(n, -0.1f), refrDir, collision.ray.getDepthReflection(), collision.ray.getDepthRefraction() + 1))).mul(colorRGB);
+            ret.madd(kt, traceRefraction(new Ray(collision.hitPoint.translateNew(n, -0.1f), refrDir, collision.ray.depthReflection, collision.ray.depthRefraction + 1))).mul(colorRGB);
         }
         if (tir || !collision.isBehind) {
-        	ret.madd(kr, traceReflection(new Ray(collision.hitPoint, reflDir, collision.ray.getDepthReflection() + 1, collision.ray.getDepthRefraction()))).mul(colorRGB);
+        	ret.madd(kr, traceReflection(new Ray(collision.hitPoint, reflDir, collision.ray.depthReflection + 1, collision.ray.depthRefraction))).mul(colorRGB);
         }
         return absorbtion != null ? ret.mul(absorbtion) : ret;
 	}

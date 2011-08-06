@@ -135,8 +135,8 @@ public class Raycast {
 		Color c;
 		int i, j, k;
 
-		int limitX = width < (bucketX + 1) * BUCKET_SIZE ? width : (bucketX + 1) * BUCKET_SIZE;
-		int limitY = height < (bucketY + 1) * BUCKET_SIZE ? height : (bucketY + 1) * BUCKET_SIZE;
+		final int limitX = width < (bucketX + 1) * BUCKET_SIZE ? width : (bucketX + 1) * BUCKET_SIZE;
+		final int limitY = height < (bucketY + 1) * BUCKET_SIZE ? height : (bucketY + 1) * BUCKET_SIZE;
 
 		auxX = bucketX * BUCKET_SIZE * stepX -0.5f;
 		for ( i = bucketX * BUCKET_SIZE; i < limitX; i++ ) {

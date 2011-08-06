@@ -15,24 +15,24 @@ import cg.utils.Color;
 
 public class Triangle implements Object3D {
 
-	protected Point3D p1, p2, p3;
-	protected Shader shader;
+	private Point3D p1, p2, p3;
+	private Shader shader;
 
 	// Used for hitTests, precomputed for performance
-	protected Vector3D v1, v2, n, nn;
-	protected float uu_D, uv_D, vv_D;
+	private Vector3D v1, v2, n, nn;
+	private float uu_D, uv_D, vv_D;
 
 	// used for texture mapping, precomputed for performance
-	protected float tu1, tu2, tu3;
-	protected float tv1, tv2, tv3;
+	private float tu1, tu2, tu3;
+	private float tv1, tv2, tv3;
 
 	// Normals for vertex mode
-	protected Vector3D n1, n2, n3;
+	private Vector3D n1, n2, n3;
 
-	protected UVType uvType;
-	protected NormalType normalType;
+	private UVType uvType;
+	private NormalType normalType;
 
-	protected Point3D pos;
+	private Point3D pos;
 
 	public Triangle(Point3D p1, Point3D p2, Point3D p3, Shader shader, UVType uvType,
 			float u1, float v1, float u2, float v2, float u3, float v3,

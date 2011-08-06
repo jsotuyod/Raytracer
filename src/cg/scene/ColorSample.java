@@ -5,26 +5,18 @@ import cg.utils.Color;
 
 public class ColorSample {
 
-	protected Vector3D shadowRayDir;
-	protected Color diffuse;
-	protected Color specular;
-	
+	private final Vector3D shadowRayDir;
+	public final Color diffuse;
+	public final Color specular;
+
 	public ColorSample(Color diffuse, Color specular, Vector3D v) {
 		super();
 		this.diffuse = diffuse;
 		this.specular = specular;
-		this.shadowRayDir = v;
+		shadowRayDir = v;
 	}
 
-	public Color getDiffuse() {
-		return diffuse;
-	}
-
-	public Color getSpecular() {
-		return specular;
-	}
-	
-	public float dotProduct(Vector3D v) {
+	public final float dotProduct(final Vector3D v) {
 		return shadowRayDir.x * v.x + shadowRayDir.y * v.y + shadowRayDir.z * v.z;
 	}
 }

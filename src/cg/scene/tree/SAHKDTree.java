@@ -20,7 +20,7 @@ public class SAHKDTree implements SceneTree {
 	private static final float COST_INTERSECTION = 80.0f * COST_TRAVERSAL;
 	private static final float MINIMUM_COST_DIFFERENCE_PER_LEVEL = 0.5f;
 
-	protected SAHKDNode root;
+	private final SAHKDNode root;
 
 	public SAHKDTree( List<Object3D> objects ) {
 
@@ -31,17 +31,19 @@ public class SAHKDTree implements SceneTree {
 		Point3D min = new Point3D( oLimits.minX.get(0), oLimits.minY.get(0), oLimits.minZ.get(0) );
 		Point3D max = new Point3D( oLimits.maxX.get(objectCount - 1), oLimits.maxY.get(objectCount - 1), oLimits.maxZ.get(objectCount - 1) );
 
-		root = splitObjects(objects, Float.POSITIVE_INFINITY, min, max, oLimits);
+		SAHKDNode root = splitObjects(objects, Float.POSITIVE_INFINITY, min, max, oLimits);
 
 		// If no good partitions are possible, just use a leaf
 		if (null == root) {
 			root = new SAHKDLeaf(objects);
 		}
+
+		this.root = root;
 	}
 
 	@Override
-	public Collision hitTest( Ray r ) {
-		return root.hitTest( r, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY );
+	public Collision hitTest(final Ray r) {
+		return root.hitTest(r, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY );
 	}
 
 	private SAHKDNode splitObjects(List<Object3D> objects, float prevCost, Point3D min, Point3D max, ObjectLimits oLimits) {
@@ -486,14 +488,14 @@ public class SAHKDTree implements SceneTree {
 	}
 
 	private interface SAHKDNode {
-		public Collision hitTest( Ray r, float min, float max );
+		public Collision hitTest(final Ray r, final float min, final float max);
 	}
 
 	private class SAHKDInternalNodeXAxis implements SAHKDNode {
 
-		private float divisionPoint;
+		private final float divisionPoint;
 
-		private SAHKDNode nodes0, nodes1;
+		private final SAHKDNode nodes0, nodes1;
 
 		public SAHKDInternalNodeXAxis(float divisionPoint, SAHKDNode leftNode, SAHKDNode rightNode) {
 			super();
@@ -504,10 +506,10 @@ public class SAHKDTree implements SceneTree {
 		}
 
 		@Override
-		public Collision hitTest(Ray r, float min, float max) {
+		public Collision hitTest(final Ray r, final float min, final float max) {
 
-			float distance = divisionPoint - r.p.x;
-			float thit = distance * r.id.x;
+			final float distance = divisionPoint - r.p.x;
+			final float thit = distance * r.id.x;
 
 			if ( thit < 0.0f || thit >= max ) {
 				// check the half containing the ray pos
@@ -548,9 +550,9 @@ public class SAHKDTree implements SceneTree {
 
 	private class SAHKDInternalNodeYAxis implements SAHKDNode {
 
-		private float divisionPoint;
+		private final float divisionPoint;
 
-		private SAHKDNode nodes0, nodes1;
+		private final SAHKDNode nodes0, nodes1;
 
 		public SAHKDInternalNodeYAxis(float divisionPoint, SAHKDNode leftNode, SAHKDNode rightNode) {
 			super();
@@ -561,10 +563,10 @@ public class SAHKDTree implements SceneTree {
 		}
 
 		@Override
-		public Collision hitTest(Ray r, float min, float max) {
+		public Collision hitTest(final Ray r, final float min, final float max) {
 
-			float distance = divisionPoint - r.p.y;
-			float thit = distance * r.id.y;
+			final float distance = divisionPoint - r.p.y;
+			final float thit = distance * r.id.y;
 
 			if ( thit < 0.0f || thit >= max ) {
 				// check the half containing the ray pos
@@ -605,9 +607,9 @@ public class SAHKDTree implements SceneTree {
 
 	private class SAHKDInternalNodeZAxis implements SAHKDNode {
 
-		private float divisionPoint;
+		private final float divisionPoint;
 
-		private SAHKDNode nodes0, nodes1;
+		private final SAHKDNode nodes0, nodes1;
 
 		public SAHKDInternalNodeZAxis(float divisionPoint, SAHKDNode leftNode, SAHKDNode rightNode) {
 			super();
@@ -618,10 +620,10 @@ public class SAHKDTree implements SceneTree {
 		}
 
 		@Override
-		public Collision hitTest(Ray r, float min, float max) {
+		public Collision hitTest(final Ray r, final float min, final float max) {
 
-			float distance = divisionPoint - r.p.z;
-			float thit = distance * r.id.z;
+			final float distance = divisionPoint - r.p.z;
+			final float thit = distance * r.id.z;
 
 			if ( thit < 0.0f || thit >= max ) {
 				// check the half containing the ray pos
@@ -662,7 +664,7 @@ public class SAHKDTree implements SceneTree {
 
 	private class SAHKDLeaf implements SAHKDNode {
 
-		private Object3D objects[];
+		private final Object3D objects[];
 
 		public SAHKDLeaf( List<Object3D> objects ) {
 
@@ -674,7 +676,7 @@ public class SAHKDTree implements SceneTree {
 		}
 
 		@Override
-		public Collision hitTest(Ray r, float min, float max) {
+		public Collision hitTest(final Ray r, final float min, final float max) {
 
 			Object3D collidedObject = null;
 			Point3D hitPoint = null, bestHitPoint = null;
