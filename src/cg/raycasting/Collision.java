@@ -1,6 +1,6 @@
 package cg.raycasting;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import cg.math.Point2D;
@@ -12,15 +12,15 @@ import cg.utils.Color;
 
 public class Collision {
 
-	final protected static float inversePI = 1.0f / (float) Math.PI;
+	final private static float inversePI = 1.0f / (float) Math.PI;
 
-	public Point3D hitPoint;
+	public final Point3D hitPoint;
 	private Point2D uv;
-	public Object3D object;
-	public Vector3D normal;
-	public Ray ray;
-	private List<ColorSample> samples;
-	public boolean isBehind;
+	public final Object3D object;
+	public final Vector3D normal;
+	public final Ray ray;
+	private final List<ColorSample> samples;
+	public final boolean isBehind;
 
 	public Collision(Point3D hitPoint, Object3D object, Vector3D normal, Ray ray) {
 		super();
@@ -28,7 +28,7 @@ public class Collision {
 		uv = null;
 		this.object = object;
 		this.ray = ray;
-		samples = new LinkedList<ColorSample>();
+		samples = new ArrayList<ColorSample>();
 
 		// Make sure this is facing forward!
 		if ( ray.d.dotProduct(normal) >= 0.0f ) {
@@ -59,7 +59,7 @@ public class Collision {
 	}
 
 	public Point2D getUV() {
-		return uv == null? uv = object.getUV(this) :uv;
+		return uv == null? uv = object.getUV(this) : uv;
 	}
 
 	public boolean addLightSample(ColorSample colorSample) {
@@ -71,7 +71,7 @@ public class Collision {
 		return samples.add(colorSample);
 	}
 
-	public Color getDiffuse(Color c) {
+	public Color getDiffuse(final Color c) {
 
 		if ( c.isBlack() ) {
 			return c;

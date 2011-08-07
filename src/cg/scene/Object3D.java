@@ -9,20 +9,20 @@ import cg.utils.Color;
 
 public interface Object3D {
 
-	public Point3D getHitPoint(Ray r);
-	
-	public Color getColor(Collision collision);
-	
+	public Point3D getHitPoint(final Ray r);
+
+	public Color getColor(final Collision collision);
+
 	public Point3D getPos();
-	
-	public Vector3D getNormal(Point3D p);
-	
+
+	public Vector3D getNormal(final Point3D p);
+
 	public float getMaxXCoord();
 	public float getMinXCoord();
 	public float getMaxYCoord();
 	public float getMinYCoord();
 	public float getMaxZCoord();
 	public float getMinZCoord();
-	
-	public Point2D getUV(Collision collision);	
+
+	public Point2D getUV(final Collision collision);
 }

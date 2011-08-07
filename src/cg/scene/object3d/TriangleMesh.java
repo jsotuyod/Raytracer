@@ -29,13 +29,13 @@ public class TriangleMesh implements Object3D {
 		NONE, VERTEX, FACEVARYING
 	}
 
-	private SceneTree triangles;
-	private Shader shader;
-	private BoundingVolume bb;
+	private final SceneTree triangles;
+	private final Shader shader;
+	private final BoundingVolume bb;
 
-	private HashMap<Long, Collision> collisionMap;
+	private final HashMap<Long, Collision> collisionMap;
 
-	private Point3D pos;
+	private final Point3D pos;
 
 	public TriangleMesh(Point3D[] points, int[] vertices, Shader shader,
 			UVType uvType, float[] uvs, NormalType normalType, float[] normals, Matrix4 transform) {
@@ -123,13 +123,13 @@ public class TriangleMesh implements Object3D {
 	}
 
 	@Override
-	public Point3D getHitPoint(Ray r) {
+	public Point3D getHitPoint(final Ray r) {
 
 		if ( bb.hitTest(r) == false ) {
 			return null;
 		}
 
-		Collision collision = triangles.hitTest(r);
+		final Collision collision = triangles.hitTest(r);
 
 		if ( collision == null ) {
 			return null;
@@ -152,12 +152,12 @@ public class TriangleMesh implements Object3D {
 	}
 
 	@Override
-	public Vector3D getNormal(Point3D p) {
+	public Vector3D getNormal(final Point3D p) {
 		return collisionMap.get(Thread.currentThread().getId()).normal;
 	}
 
 	@Override
-	public Point2D getUV(Collision collision) {
+	public Point2D getUV(final Collision collision) {
 		return collisionMap.get(Thread.currentThread().getId()).getUV();
 	}
 

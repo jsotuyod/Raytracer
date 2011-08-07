@@ -15,24 +15,24 @@ import cg.utils.Color;
 
 public class Triangle implements Object3D {
 
-	private Point3D p1, p2, p3;
-	private Shader shader;
+	private final Point3D p1, p2, p3;
+	private final Shader shader;
 
 	// Used for hitTests, precomputed for performance
-	private Vector3D v1, v2, n, nn;
-	private float uu_D, uv_D, vv_D;
+	private final Vector3D v1, v2, n, nn;
+	private final float uu_D, uv_D, vv_D;
 
 	// used for texture mapping, precomputed for performance
-	private float tu1, tu2, tu3;
-	private float tv1, tv2, tv3;
+	private final float tu1, tu2, tu3;
+	private final float tv1, tv2, tv3;
 
 	// Normals for vertex mode
-	private Vector3D n1, n2, n3;
+	private final Vector3D n1, n2, n3;
 
-	private UVType uvType;
-	private NormalType normalType;
+	private final UVType uvType;
+	private final NormalType normalType;
 
-	private Point3D pos;
+	private final Point3D pos;
 
 	public Triangle(Point3D p1, Point3D p2, Point3D p3, Shader shader, UVType uvType,
 			float u1, float v1, float u2, float v2, float u3, float v3,
@@ -90,21 +90,21 @@ public class Triangle implements Object3D {
 	}
 
 	@Override
-	public Color getColor(Collision collision) {
+	public Color getColor(final Collision collision) {
 		return shader.getPointColor(collision);
 	}
 
 	@Override
-	public Point3D getHitPoint(Ray p) {
+	public Point3D getHitPoint(final Ray p) {
 
-		float b = n.x * p.d.x + n.y * p.d.y + n.z * p.d.z;
+		final float b = n.x * p.d.x + n.y * p.d.y + n.z * p.d.z;
 
 		if (b == 0.0f) {
 			return null;	// Ray is parallel to the plane in which the triangle is
 		}
 
-		Vector3D v = new Vector3D( p1, p.p );
-	    float r = -(n.x * v.x + n.y * v.y + n.z * v.z ) / b;
+		final Vector3D v = new Vector3D( p1, p.p );
+		final float r = -(n.x * v.x + n.y * v.y + n.z * v.z ) / b;
 
 	    if (r < 0.0f || r > p.travelledDistance) {
 	        return null;	// Ray goes away from triangle, or hits further than previously found hit
@@ -112,19 +112,19 @@ public class Triangle implements Object3D {
 
 	    // for a segment, also test if (r > 1.0) => no intersect
 
-	    Point3D hitPoint = p.p.translateNew( p.d, r );	// intersect point of ray and plane
+	    final Point3D hitPoint = p.p.translateNew( p.d, r );	// intersect point of ray and plane
 
 	    // is hitPoint inside the triangle?
-	    Vector3D w = new Vector3D( p1, hitPoint );
-	    float wu = w.x * v1.x + w.y * v1.y + w.z * v1.z;
-	    float wv = w.x * v2.x + w.y * v2.y + w.z * v2.z;
+	    final Vector3D w = new Vector3D( p1, hitPoint );
+	    final float wu = w.x * v1.x + w.y * v1.y + w.z * v1.z;
+	    final float wv = w.x * v2.x + w.y * v2.y + w.z * v2.z;
 
 	    // get and test parametric coords
-	    float s = uv_D * wv - vv_D * wu;
+	    final float s = uv_D * wv - vv_D * wu;
 	    if (s < 0.0f || s > 1.0f) {
 			return null;
 		}
-	    float t = uv_D * wu - uu_D * wv;
+	    final float t = uv_D * wu - uu_D * wv;
 	    if (t < 0.0f || (s + t) > 1.0f) {
 			return null;
 		}
@@ -144,22 +144,22 @@ public class Triangle implements Object3D {
 	}
 
 	@Override
-	public Vector3D getNormal(Point3D p) {
+	public Vector3D getNormal(final Point3D p) {
 
 		switch (normalType) {
         case NONE:
             return nn.clone();
 
         case VERTEX:
-    	    Vector3D ww = new Vector3D( p1, p );
-    	    float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
-		    float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
+        	final Vector3D ww = new Vector3D( p1, p );
+        	final float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
+        	final float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
 
     	    // get parametric coords
-    	    float s = uv_D * wv - vv_D * wu;
-    	    float t = uv_D * wu - uu_D * wv;
+        	final float s = uv_D * wv - vv_D * wu;
+        	final float t = uv_D * wu - uu_D * wv;
 
-        	float w = 1.0f - s - t;
+        	final float w = 1.0f - s - t;
 
         	return new Vector3D( w * n1.x + s * n2.x + t * n3.x,
         			w * n1.y + s * n2.y + t * n3.y,
@@ -171,7 +171,7 @@ public class Triangle implements Object3D {
 	}
 
 	@Override
-	public Point2D getUV(Collision collision) {
+	public Point2D getUV(final Collision collision) {
 		float u = 0.0f;
 		float v = 0.0f;
 
@@ -180,14 +180,14 @@ public class Triangle implements Object3D {
 			break;
 
 		case VERTEX:
-			Vector3D ww = new Vector3D( p1, collision.hitPoint );
-			float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
-		    float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
+			final Vector3D ww = new Vector3D( p1, collision.hitPoint );
+			final float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
+			final float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
 
     	    // get parametric coords
-    	    float s = uv_D * wv - vv_D * wu;
-    	    float t = uv_D * wu - uu_D * wv;
-			float w = 1.0f - s - t;
+			final float s = uv_D * wv - vv_D * wu;
+			final float t = uv_D * wu - uu_D * wv;
+			final float w = 1.0f - s - t;
             u = w * tu1 + s * tu2 + t * tu3;
             v = w * tv1 + s * tv2 + t * tv3;
 			break;

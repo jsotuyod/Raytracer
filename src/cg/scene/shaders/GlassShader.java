@@ -6,13 +6,13 @@ import cg.raycasting.Ray;
 import cg.utils.Color;
 
 public class GlassShader extends Shader {
-	private float eta;
-	private float ieta;
-	private Color colorRGB;
-	private float absDistance;
-	private float iAbsDistance;
-	private Color absColor;
-	private Color oAbsColor;
+	private final float eta;
+	private final float ieta;
+	private final Color colorRGB;
+	private final float absDistance;
+	private final float iAbsDistance;
+	private final Color absColor;
+	private final Color oAbsColor;
 
 	public GlassShader(String name, String type, float eta, Color colorRGB,
 			float absDistance, Color colorAbs) {
@@ -23,6 +23,8 @@ public class GlassShader extends Shader {
 
 		if (absColor != null) {
 			oAbsColor = absColor.clone().opposite();
+		} else {
+			oAbsColor = null;
 		}
 
 		this.colorRGB = colorRGB;
@@ -38,38 +40,38 @@ public class GlassShader extends Shader {
 	@Override
 	public Color getPointColor(Collision collision) {
 
-		Vector3D n = collision.normal;
-		Vector3D d = collision.ray.d;
+		final Vector3D n = collision.normal;
+		final Vector3D d = collision.ray.d;
 
-        float cos = Math.max(-(d.x * n.x + d.y * n.y + d.z * n.z), 0.0f);
-        float neta = collision.isBehind ? eta : ieta;
+		final float cos = Math.max(-(d.x * n.x + d.y * n.y + d.z * n.z), 0.0f);
+		final float neta = collision.isBehind ? eta : ieta;
 
-        float dn = 2.0f * cos;
-        Vector3D reflDir = new Vector3D((dn * n.x) + d.x,
+		final float dn = 2.0f * cos;
+		final Vector3D reflDir = new Vector3D((dn * n.x) + d.x,
         		(dn * n.y) + d.y,
         		(dn * n.z) + d.z);
 
         // refracted ray
-        float arg = 1.0f - (neta * neta * (1.0f - (cos * cos)));
-        boolean tir = arg < 0.0f;
-        Vector3D refrDir = null;
+		final float arg = 1.0f - (neta * neta * (1.0f - (cos * cos)));
+		final boolean tir = arg < 0.0f;
+		final Vector3D refrDir;
         if (tir) {
         	refrDir = new Vector3D(0.0f, 0.0f , 0.0f);
         } else {
-            float nK = (neta * cos) - (float) Math.sqrt(arg);
+        	final float nK = (neta * cos) - (float) Math.sqrt(arg);
             refrDir = new Vector3D((neta * d.x) + (nK * n.x),
             		(neta * d.y) + (nK * n.y),
             		(neta * d.z) + (nK * n.z));
         }
 
         // compute Fresnel terms
-        float cosTheta1 = n.x * reflDir.x + n.y * reflDir.y + n.z * reflDir.z;
-        float cosTheta2 = -(n.x * refrDir.x + n.y * refrDir.y + n.z * refrDir.z);
+        final float cosTheta1 = n.x * reflDir.x + n.y * reflDir.y + n.z * reflDir.z;
+        final float cosTheta2 = -(n.x * refrDir.x + n.y * refrDir.y + n.z * refrDir.z);
 
-        float pPara = (cosTheta1 - eta * cosTheta2) / (cosTheta1 + eta * cosTheta2);
-        float pPerp = (eta * cosTheta1 - cosTheta2) / (eta * cosTheta1 + cosTheta2);
-        float kr = 0.5f * (pPara * pPara + pPerp * pPerp);
-        float kt = 1.0f - kr;
+        final float pPara = (cosTheta1 - eta * cosTheta2) / (cosTheta1 + eta * cosTheta2);
+        final float pPerp = (eta * cosTheta1 - cosTheta2) / (eta * cosTheta1 + cosTheta2);
+        final float kr = 0.5f * (pPara * pPara + pPerp * pPerp);
+        final float kt = 1.0f - kr;
 
         Color absorbtion = null;
         if (collision.isBehind && absDistance > 0.0f) {
@@ -81,7 +83,7 @@ public class GlassShader extends Shader {
             }
         }
         // refracted ray
-        Color ret = new Color();
+        final Color ret = new Color();
         if (!tir) {
             ret.madd(kt, traceRefraction(new Ray(collision.hitPoint.translateNew(n, -0.1f), refrDir, collision.ray.depthReflection, collision.ray.depthRefraction + 1))).mul(colorRGB);
         }

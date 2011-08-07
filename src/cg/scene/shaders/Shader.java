@@ -29,21 +29,21 @@ public abstract class Shader {
 
 	public abstract Color getPointColor(Collision collision);
 
-	protected Color traceRefraction(Ray refRay) {
+	protected final Color traceRefraction(final Ray refRay) {
 		// limit path depth and disable caustic paths
 		if (refRay.depthRefraction >= MAX_REFRACTION_DEPTH ) { //|| previous.getDiffuseDepth() > 0)
 			return Color.BLACK;
 		}
-		Collision col = Registry.getScene().castRay(refRay);
+		final Collision col = Registry.getScene().castRay(refRay);
 		return col != null ? col.object.getColor(col) : Color.BLACK;
 	}
 
-	protected Color traceReflection(Ray refRay) {
+	protected final Color traceReflection(final Ray refRay) {
 	     // limit path depth and disable caustic paths
        if (refRay.depthReflection >= MAX_REFLECTION_DEPTH ) { //|| previous.getDiffuseDepth() > 0)
            return Color.BLACK;
        }
-       Collision col = Registry.getScene().castRay(refRay);
+       final Collision col = Registry.getScene().castRay(refRay);
        return col != null ? col.object.getColor(col) : Color.BLACK;
 	}
 }

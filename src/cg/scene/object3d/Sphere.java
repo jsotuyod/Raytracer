@@ -20,14 +20,14 @@ public class Sphere implements Object3D {
 	private static final float I_TWO_PI = 1.0f / TWO_PI;
 	private static final float I_PI = 1.0f / (float) Math.PI;
 
-	private Point3D pos;
-	private float radius;
-	private float radiusSq;
-	private Shader shader;
+	private final Point3D pos;
+	private final float radius;
+	private final float radiusSq;
+	private final Shader shader;
 
 	// Texturing
-	private Matrix4 transform;
-	private Vector3D vToCenter;
+	private final Matrix4 transform;
+	private final Vector3D vToCenter;
 
 	public Sphere(Point3D pos, float radius, Shader shader, Matrix4 transform) {
 		super();
@@ -46,20 +46,20 @@ public class Sphere implements Object3D {
 	}
 
 	@Override
-	public Point3D getHitPoint(Ray r) {
+	public Point3D getHitPoint(final Ray r) {
 
-		Vector3D vToP = new Vector3D( pos, r.p );
+		final Vector3D vToP = new Vector3D( pos, r.p );
 
 		float b = 2.0f * (r.d.x * vToP.x + r.d.y * vToP.y + r.d.z * vToP.z);
 
-		float disc = b * b - 4.0f * (vToP.x * vToP.x + vToP.y * vToP.y + vToP.z * vToP.z - radiusSq);
+		final float disc = b * b - 4.0f * (vToP.x * vToP.x + vToP.y * vToP.y + vToP.z * vToP.z - radiusSq);
 
 		if ( disc < 0.0f ) {
 			return null;	// No real solutions => no intersection
 		}
 
-		float distSqrt = (float) Math.sqrt(disc);
-	    float q;
+		final float distSqrt = (float) Math.sqrt(disc);
+		final float q;
 	    b *= -1.0f;
 
 	    // Get smallest positive collision point
@@ -87,20 +87,8 @@ public class Sphere implements Object3D {
 		return pos;
 	}
 
-	public void setPos(Point3D pos) {
-		this.pos = pos;
-	}
-
-	public float getRadius() {
-		return radius;
-	}
-
-	public void setRadius(float radius) {
-		this.radius = radius;
-	}
-
 	@Override
-	public Color getColor(Collision collision) {
+	public Color getColor(final Collision collision) {
 		return shader.getPointColor(collision);
 	}
 
@@ -110,15 +98,15 @@ public class Sphere implements Object3D {
 	}
 
 	@Override
-	public Vector3D getNormal(Point3D p) {
+	public Vector3D getNormal(final Point3D p) {
 
 		return new Vector3D(pos, p).normalize();
 	}
 
 	@Override
-	public Point2D getUV(Collision collision) {
+	public Point2D getUV(final Collision collision) {
 
-		Vector3D n;
+		final Vector3D n;
 
 		if ( transform != null ) {
 			n = transform.transform(collision.normal.clone()).substract(vToCenter).normalize();
@@ -130,7 +118,7 @@ public class Sphere implements Object3D {
         if (phi < 0.0f) {
 			phi += TWO_PI;
 		}
-        float theta = (float) Math.acos(n.z);
+        final float theta = (float) Math.acos(n.z);
 
         return new Point2D( phi * I_TWO_PI, theta * I_PI);
 	}

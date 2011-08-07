@@ -6,8 +6,8 @@ import cg.raycasting.Ray;
 import cg.utils.Color;
 
 public class MirrorShader extends Shader {
-	private Color colorRGB;
-	private Color oppositeColor;
+	private final Color colorRGB;
+	private final Color oppositeColor;
 
 	public MirrorShader(String name, String type, Color colorRGB) {
 		super(name, type);
@@ -23,24 +23,24 @@ public class MirrorShader extends Shader {
 
 	@Override
 	public Color getPointColor(Collision collision) {
-		Vector3D n = collision.normal;
-		Vector3D d = collision.ray.d;
+		final Vector3D n = collision.normal;
+		final Vector3D d = collision.ray.d;
 
-		float cos = Math.max(-(d.x * n.x + d.y * n.y + d.z * n.z), 0.0f);
-        float dn = 2.0f * cos;
+		final float cos = Math.max(-(d.x * n.x + d.y * n.y + d.z * n.z), 0.0f);
+		final float dn = 2.0f * cos;
 
-        Vector3D refDir = new Vector3D((dn * n.x) + d.x,
+		final Vector3D refDir = new Vector3D((dn * n.x) + d.x,
         		(dn * n.y) + d.y,
         		(dn * n.z) + d.z);
 
-        Ray refRay = new Ray(collision.hitPoint, refDir, collision.ray.depthReflection + 1, collision.ray.depthRefraction);
+		final Ray refRay = new Ray(collision.hitPoint, refDir, collision.ray.depthReflection + 1, collision.ray.depthRefraction);
 
         // compute Fresnel term
-        cos = 1.0f - cos;
-        float cos2 = cos * cos;
-        float cos5 = cos2 * cos2 * cos;
+		final float ocos = 1.0f - cos;
+        final float ocos2 = ocos * ocos;
+        final float ocos5 = ocos2 * ocos2 * ocos;
 
         Color c = oppositeColor.clone();
-        return c.mul(cos5).add(colorRGB).mul(traceReflection(refRay));
+        return c.mul(ocos5).add(colorRGB).mul(traceReflection(refRay));
 	}
 }

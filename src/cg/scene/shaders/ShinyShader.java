@@ -8,14 +8,14 @@ import cg.utils.Color;
 
 public class ShinyShader extends Shader {
 	private final Color colorRGB;
+	private final Color reflectionColor;
 	private final LightManager lm;
-	private final float refl ;
 
 	public ShinyShader(String name, String type, Color colorRGB, float refl, LightManager lm) {
 		super(name, type);
 		this.colorRGB = colorRGB;
 		this.lm = lm;
-		this.refl = refl;
+		reflectionColor = colorRGB.clone().mul(refl);
 	}
 
 	@Override
@@ -48,10 +48,8 @@ public class ShinyShader extends Shader {
         final float ocos2 = ocos * ocos;
         final float ocos5 = ocos2 * ocos2 * ocos;
 
-        final Color r = colorRGB.clone().mul(refl);
+        ret.sub(reflectionColor);
 
-        ret.sub(r);
-
-        return lr.add(ret.mul(ocos5).add(r).mul(traceReflection(refRay)));
+        return lr.add(ret.mul(ocos5).add(reflectionColor).mul(traceReflection(refRay)));
 	}
 }

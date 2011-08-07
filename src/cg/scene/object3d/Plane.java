@@ -12,12 +12,12 @@ import cg.utils.Color;
 
 public class Plane implements Object3D {
 
-	private Shader shader;
-	private Vector3D n;
-	private Vector3D uAxis;
-	private Vector3D vAxis;
-	private Point3D p;
-	private float D;
+	private final Shader shader;
+	private final Vector3D n;
+	private final Vector3D uAxis;
+	private final Vector3D vAxis;
+	private final Point3D p;
+	private final float D;
 
 	public Plane( Point3D p1, Point3D p2, Point3D p3, Shader shader ) {
 		this( p3, new Vector3D( p2, p1 ).crossProduct( new Vector3D( p3, p2 ) ), shader );
@@ -44,20 +44,20 @@ public class Plane implements Object3D {
 	}
 
 	@Override
-	public Color getColor(Collision collision) {
+	public Color getColor(final Collision collision) {
 		return shader.getPointColor(collision);
 	}
 
 	@Override
-	public Point3D getHitPoint(Ray r) {
+	public Point3D getHitPoint(final Ray r) {
 
-		float aux = n.x * r.d.x + n.y * r.d.y + n.z * r.d.z;
+		final float aux = n.x * r.d.x + n.y * r.d.y + n.z * r.d.z;
 
 		if (aux == 0.0f) {
 			return null;	// Parallel to the plane (or on it), it's a miss
 		}
 
-		float t = (D - n.x * r.p.x - n.y * r.p.y - n.z * r.p.z) / aux;
+		final float t = (D - n.x * r.p.x - n.y * r.p.y - n.z * r.p.z) / aux;
 
 		if (t < 0.0f || t > r.travelledDistance) {
 			// Hit was behind camera, or further than a previously found hit, ignore it!
@@ -79,14 +79,14 @@ public class Plane implements Object3D {
 	}
 
 	@Override
-	public Vector3D getNormal(Point3D p) {
+	public Vector3D getNormal(final Point3D p) {
 		return n;
 	}
 
 	@Override
-	public Point2D getUV(Collision collision) {
+	public Point2D getUV(final Collision collision) {
 		float u, v;
-		Point3D p = collision.hitPoint;
+		final Point3D p = collision.hitPoint;
 
 		if ( uAxis.x != 0.0f ) {
 			u = ( ( p.x - this.p.x ) / uAxis.x ) % 1.0f;

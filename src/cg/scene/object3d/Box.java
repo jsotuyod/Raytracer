@@ -12,14 +12,14 @@ import cg.utils.Color;
 
 public class Box implements Object3D {
 
-	private Shader shader;
-	private Vector3D[] normals = new Vector3D[6];
-	private float[] D = new float[6];
-	private Point3D pos;
-	private Point3D bottomLeftBack, topRightFront;
-	private Point3D bottomLeftFront, topRightBack;
-	private Point3D bottomRightBack, topLeftFront;
-	private Point3D bottomRightFront, topLeftBack;
+	private final Shader shader;
+	private final Vector3D[] normals = new Vector3D[6];
+	private final float[] D = new float[6];
+	private final Point3D pos;
+	private final Point3D bottomLeftBack, topRightFront;
+	private final Point3D bottomLeftFront, topRightBack;
+	private final Point3D bottomRightBack, topLeftFront;
+	private final Point3D bottomRightFront, topLeftBack;
 
 	public Box(Point3D bottomLeftBack, Point3D topRightFront, Point3D bottomLeftFront,
 			Point3D topRightBack, Point3D bottomRightBack, Point3D topLeftFront,
@@ -66,12 +66,12 @@ public class Box implements Object3D {
 	}
 
 	@Override
-	public Point3D getHitPoint(Ray r) {
+	public Point3D getHitPoint(final Ray r) {
 
 		float tNear = Float.NEGATIVE_INFINITY;
 		float tFar = r.travelledDistance;
-		Point3D p = r.p;
-		Vector3D d = r.d;
+		final Point3D p = r.p;
+		final Vector3D d = r.d;
 		Vector3D n;
 
 		float vd, vn, t;
@@ -120,7 +120,7 @@ public class Box implements Object3D {
 	}
 
 	@Override
-	public Color getColor(Collision collision) {
+	public Color getColor(final Collision collision) {
 		return shader.getPointColor(collision);
 	}
 
@@ -143,7 +143,7 @@ public class Box implements Object3D {
 	}
 
 	@Override
-	public Vector3D getNormal(Point3D p) {
+	public Vector3D getNormal(final Point3D p) {
 
 		for ( int i = 0; i < 6; i++ ) {
 			if ( Math.abs( normals[i].dotProduct(p) - D[i] ) <= 0.00001f ) {
@@ -156,7 +156,7 @@ public class Box implements Object3D {
 	}
 
 	@Override
-	public Point2D getUV(Collision collision) {
+	public Point2D getUV(final Collision collision) {
 		// Box can't be textured
 		return new Point2D(0,0);
 	}
