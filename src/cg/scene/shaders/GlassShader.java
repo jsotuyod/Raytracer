@@ -39,17 +39,13 @@ public class GlassShader extends Shader {
 
 	@Override
 	public Color getPointColor(Collision collision) {
-
-		final Vector3D n = collision.normal;
-		final Vector3D d = collision.ray.d;
-
-		final float cos = Math.max(-(d.x * n.x + d.y * n.y + d.z * n.z), 0.0f);
+		final float cos = Math.max(-(collision.ray.d.x * collision.normal.x + collision.ray.d.y * collision.normal.y + collision.ray.d.z * collision.normal.z), 0.0f);
 		final float neta = collision.isBehind ? eta : ieta;
 
 		final float dn = 2.0f * cos;
-		final Vector3D reflDir = new Vector3D((dn * n.x) + d.x,
-        		(dn * n.y) + d.y,
-        		(dn * n.z) + d.z);
+		final Vector3D reflDir = new Vector3D((dn * collision.normal.x) + collision.ray.d.x,
+        		(dn * collision.normal.y) + collision.ray.d.y,
+        		(dn * collision.normal.z) + collision.ray.d.z);
 
         // refracted ray
 		final float arg = 1.0f - (neta * neta * (1.0f - (cos * cos)));
@@ -59,14 +55,14 @@ public class GlassShader extends Shader {
         	refrDir = new Vector3D(0.0f, 0.0f , 0.0f);
         } else {
         	final float nK = (neta * cos) - (float) Math.sqrt(arg);
-            refrDir = new Vector3D((neta * d.x) + (nK * n.x),
-            		(neta * d.y) + (nK * n.y),
-            		(neta * d.z) + (nK * n.z));
+            refrDir = new Vector3D((neta * collision.ray.d.x) + (nK * collision.normal.x),
+            		(neta * collision.ray.d.y) + (nK * collision.normal.y),
+            		(neta * collision.ray.d.z) + (nK * collision.normal.z));
         }
 
         // compute Fresnel terms
-        final float cosTheta1 = n.x * reflDir.x + n.y * reflDir.y + n.z * reflDir.z;
-        final float cosTheta2 = -(n.x * refrDir.x + n.y * refrDir.y + n.z * refrDir.z);
+        final float cosTheta1 = collision.normal.x * reflDir.x + collision.normal.y * reflDir.y + collision.normal.z * reflDir.z;
+        final float cosTheta2 = -(collision.normal.x * refrDir.x + collision.normal.y * refrDir.y + collision.normal.z * refrDir.z);
 
         final float pPara = (cosTheta1 - eta * cosTheta2) / (cosTheta1 + eta * cosTheta2);
         final float pPerp = (eta * cosTheta1 - cosTheta2) / (eta * cosTheta1 + cosTheta2);
@@ -85,7 +81,7 @@ public class GlassShader extends Shader {
         // refracted ray
         final Color ret = new Color();
         if (!tir) {
-            ret.madd(kt, traceRefraction(new Ray(collision.hitPoint.translateNew(n, -0.1f), refrDir, collision.ray.depthReflection, collision.ray.depthRefraction + 1))).mul(colorRGB);
+            ret.madd(kt, traceRefraction(new Ray(collision.hitPoint.translateNew(collision.normal, -0.1f), refrDir, collision.ray.depthReflection, collision.ray.depthRefraction + 1))).mul(colorRGB);
         }
         if (tir || !collision.isBehind) {
         	ret.madd(kr, traceReflection(new Ray(collision.hitPoint, reflDir, collision.ray.depthReflection + 1, collision.ray.depthRefraction))).mul(colorRGB);

@@ -25,18 +25,14 @@ public class ShinyShader extends Shader {
 
 	@Override
 	public Color getPointColor(Collision collision) {
-		final Vector3D n = collision.normal;
-		final Ray ray = collision.ray;
-		final Vector3D rd = ray.d;
-
-		final float cos = Math.max(-(rd.x * n.x + rd.y * n.y + rd.z * n.z), 0.0f);
+		final float cos = Math.max(-(collision.ray.d.x * collision.normal.x + collision.ray.d.y * collision.normal.y + collision.ray.d.z * collision.normal.z), 0.0f);
         final float dn = 2.0f * cos;
 
-        final Vector3D refDir = new Vector3D((dn * n.x) + rd.x,
-        		(dn * n.y) + rd.y,
-        		(dn * n.z) + rd.z);
+        final Vector3D refDir = new Vector3D((dn * collision.normal.x) + collision.ray.d.x,
+        		(dn * collision.normal.y) + collision.ray.d.y,
+        		(dn * collision.normal.z) + collision.ray.d.z);
 
-        final Ray refRay = new Ray(collision.hitPoint, refDir, ray.depthReflection + 1, ray.depthRefraction);
+        final Ray refRay = new Ray(collision.hitPoint, refDir, collision.ray.depthReflection + 1, collision.ray.depthRefraction);
 
         // Get color samples from lights
 		lm.addLightSamples(collision);

@@ -24,16 +24,14 @@ public class PointLight implements Light {
 
 	@Override
 	public ColorSample getColorSample(Collision collision) {
-
-		final Point3D p = collision.hitPoint;
-		final Vector3D d = new Vector3D( p, pos );
+		final Vector3D d = new Vector3D(collision.hitPoint, pos);
 
 		if (d.x * collision.normal.x + d.y * collision.normal.y + d.z * collision.normal.z > 0.0f) {
 			Color c = null;
-			final float distanceSq = pos.getDistanceSquared(p);
+			final float distanceSq = pos.getDistanceSquared(collision.hitPoint);
 
 			// Check if there is something hiding the point
-			final Ray r = new Ray(p, d.clone());
+			final Ray r = new Ray(collision.hitPoint, d.clone());
 			final Collision test = Registry.getScene().castRay(r);
 
 			if ( test != null && r.travelledDistance * r.travelledDistance < distanceSq ) {
