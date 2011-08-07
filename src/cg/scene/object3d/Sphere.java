@@ -50,7 +50,7 @@ public class Sphere implements Object3D {
 
 		final Vector3D vToP = new Vector3D( pos, r.p );
 
-		float b = 2.0f * (r.d.x * vToP.x + r.d.y * vToP.y + r.d.z * vToP.z);
+		float b = -2.0f * (r.d.x * vToP.x + r.d.y * vToP.y + r.d.z * vToP.z);
 
 		final float disc = b * b - 4.0f * (vToP.x * vToP.x + vToP.y * vToP.y + vToP.z * vToP.z - radiusSq);
 
@@ -60,7 +60,6 @@ public class Sphere implements Object3D {
 
 		final float distSqrt = (float) Math.sqrt(disc);
 		final float q;
-	    b *= -1.0f;
 
 	    // Get smallest positive collision point
 	    if (b > distSqrt) {
