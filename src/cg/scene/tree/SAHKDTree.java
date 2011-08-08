@@ -42,7 +42,7 @@ public class SAHKDTree implements SceneTree {
 	}
 
 	@Override
-	public Collision hitTest(final Ray r) {
+	public final Collision hitTest(final Ray r) {
 		return root.hitTest(r, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY );
 	}
 
