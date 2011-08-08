@@ -10,19 +10,26 @@ import cg.utils.ImageBuffer;
 public class Raycast {
 	private final static int BUCKET_SIZE = 32;
 
-	protected Scene scene;
-	protected ImageBuffer buffer;
-	protected int previousPercentage = 0;
-	protected int[] renderCoords;
-	protected int renderedBoxes;
-	protected int totalBoxes;
-	protected int samples;
-	protected int width, height;
-	protected float iSamples;
-	protected float stepX, stepY;
-	protected Camera camera;
-	protected boolean showProgress;
-	protected Random random = new Random();
+	private Scene scene;
+	private ImageBuffer buffer;
+	private int previousPercentage = 0;
+	private int[] renderCoords;
+	private int renderedBoxes;
+	private int totalBoxes;
+	private int samples;
+	private int width, height;
+	private float iSamples;
+	private float stepX, stepY;
+	private Camera camera;
+	private boolean showProgress;
+	private Random random = new Random();
+	private Thread[] renderThreads;
+
+	public Raycast(boolean showProgress, int nCores) {
+		this.showProgress = showProgress;
+
+		renderThreads = new Thread[nCores];
+	}
 
 	public void setRenderBuffer(ImageBuffer buffer) {
 		this.buffer = buffer;
@@ -58,7 +65,7 @@ public class Raycast {
 
 	private void printPercent() {
 
-		int percentage = Math.round( renderedBoxes / (float) totalBoxes * 100 );
+		int percentage = Math.round(renderedBoxes / (float) totalBoxes * 100);
 		if (previousPercentage != percentage) {
 
 			previousPercentage = percentage;
@@ -77,12 +84,8 @@ public class Raycast {
 		}
 	}
 
-	public boolean render( boolean showProgress, int nCores) {
-
-		this.showProgress = showProgress;
+	public boolean render() {
 		renderedBoxes = 0;
-
-		Thread[] renderThreads = new Thread[nCores];
 
 		for (int i = 0; i < renderThreads.length; i++) {
             renderThreads[i] = new RenderPart();
@@ -108,18 +111,17 @@ public class Raycast {
 
 			while (true) {
 				synchronized( Raycast.this ) {
-					if ( renderedBoxes == totalBoxes ) {
+					if (renderedBoxes == totalBoxes) {
 						return;
 					}
 
-					bucketX = renderCoords[renderedBoxes];
-					bucketY = renderCoords[renderedBoxes + 1];
-					renderedBoxes += 2;
+					bucketX = renderCoords[renderedBoxes++];
+					bucketY = renderCoords[renderedBoxes++];
 				}
 
 				renderPart(bucketX, bucketY);
 
-				if ( showProgress ) {
+				if (showProgress) {
 					printPercent();
 				}
 			}

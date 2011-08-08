@@ -70,8 +70,6 @@ public class Box implements Object3D {
 
 		float tNear = Float.NEGATIVE_INFINITY;
 		float tFar = r.travelledDistance;
-		final Point3D p = r.p;
-		final Vector3D d = r.d;
 		Vector3D n;
 
 		float vd, vn, t;
@@ -79,8 +77,8 @@ public class Box implements Object3D {
 		// Check every plane defining the convex body
 		for ( int i = 0 ; i < 6; i++ ) {
 			n = normals[i];
-			vd = n.x * d.x + n.y * d.y + n.z * d.z;
-			vn = D[i] - (n.x * p.x + n.y * p.y + n.z * p.z);
+			vd = n.x * r.d.x + n.y * r.d.y + n.z * r.d.z;
+			vn = D[i] - (n.x * r.p.x + n.y * r.p.y + n.z * r.p.z);
 
 			if ( vd == 0.0f ) {
 				if ( vn < 0.0f ) {

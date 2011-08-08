@@ -3,7 +3,7 @@ package cg.math;
 public class Point3D implements Cloneable {
 	public float x, y, z;
 
-	public Point3D(float x, float y, float z) {
+	public Point3D(final float x, final float y, final float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
