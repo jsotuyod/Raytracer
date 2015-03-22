@@ -918,6 +918,10 @@ public class SCParser {
             int numVertices = p.getNextInt();
             int numTriangles = p.getNextInt();
 
+            if(debug) {
+				System.out.println("Mesh has : " + numTriangles + " polygons");
+			}
+
             Point3D[] points = new Point3D[numVertices];
             float[] pointCoords = new float[3];
             float[] normals = new float[numVertices * 3];
