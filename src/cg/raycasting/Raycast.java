@@ -128,7 +128,7 @@ public class Raycast {
 		}
 	}
 
-	private void renderPart(int bucketX, int bucketY) {
+	private void renderPart(final int bucketX, final int bucketY) {
 
 		float auxX, auxY;
 

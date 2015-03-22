@@ -5,16 +5,15 @@ import cg.math.Vector3D;
 
 public class Ray {
 
-	public Point3D p;
-	public Vector3D d;
-	public Vector3D id;
+	public final Point3D p;
+	public final Vector3D d;
+	public final Vector3D id;
 	public float travelledDistance;
 
-	public int depthReflection;
-	public int depthRefraction;
+	public final int depthReflection;
+	public final int depthRefraction;
 
-	public Ray(Point3D p, Vector3D v) {
-		super();
+	public Ray(final Point3D p, final Vector3D v) {
 		this.p = p;
 		d = v.normalize();
 		id = new Vector3D(1.0f / d.x, 1.0f / d.y, 1.0f / d.z);
@@ -23,8 +22,7 @@ public class Ray {
 		travelledDistance = Float.POSITIVE_INFINITY;
 	}
 
-	public Ray (Point3D p, Vector3D v, int depthReflection, int depthRefraction) {
-		super();
+	public Ray(final Point3D p, final Vector3D v, final int depthReflection, final int depthRefraction) {
 		this.p = p;
 		d = v.normalize();
 		id = new Vector3D(1.0f / d.x, 1.0f / d.y, 1.0f / d.z);

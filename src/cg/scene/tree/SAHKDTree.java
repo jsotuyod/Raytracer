@@ -554,8 +554,7 @@ public class SAHKDTree implements SceneTree {
 
 		private final SAHKDNode nodes0, nodes1;
 
-		public SAHKDInternalNodeYAxis(float divisionPoint, SAHKDNode leftNode, SAHKDNode rightNode) {
-			super();
+		public SAHKDInternalNodeYAxis(final float divisionPoint, final SAHKDNode leftNode, final SAHKDNode rightNode) {
 			this.divisionPoint = divisionPoint;
 
 			nodes0 = leftNode;
@@ -564,19 +563,18 @@ public class SAHKDTree implements SceneTree {
 
 		@Override
 		public Collision hitTest(final Ray r, final float min, final float max) {
-
 			final float distance = divisionPoint - r.p.y;
 			final float thit = distance * r.id.y;
 
-			if ( thit < 0.0f || thit >= max ) {
+			if (thit < 0.0f || thit >= max) {
 				// check the half containing the ray pos
-				if ( distance < 0.0f ) {
+				if (distance < 0.0f) {
 					return nodes1.hitTest(r, min, max);
 				} else {
 					return nodes0.hitTest(r, min, max);
 				}
-			} else if ( thit <= min ) {
-				if ( r.d.y < 0.0f ) {
+			} else if (thit <= min) {
+				if (r.d.y < 0.0f) {
 					return nodes0.hitTest(r, min, max);
 				} else {
 					return nodes1.hitTest(r, min, max);
@@ -585,12 +583,12 @@ public class SAHKDTree implements SceneTree {
 				Collision c;
 
 				// check the half not containing the ray pos
-				if ( distance < 0.0f ) {
-					if ( ( c = nodes1.hitTest(r, min, thit) ) == null ) {
+				if (distance < 0.0f) {
+					if ((c = nodes1.hitTest(r, min, thit)) == null) {
 						c = nodes0.hitTest(r, thit, max);
 					}
 				} else {
-					if ( ( c = nodes0.hitTest(r, min, thit) ) == null ) {
+					if ((c = nodes0.hitTest(r, min, thit)) == null) {
 						c = nodes1.hitTest(r, thit, max);
 					}
 				}

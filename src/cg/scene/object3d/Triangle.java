@@ -96,15 +96,14 @@ public class Triangle implements Object3D {
 
 	@Override
 	public Point3D getHitPoint(final Ray p) {
-
 		final float b = n.x * p.d.x + n.y * p.d.y + n.z * p.d.z;
 
 		if (b == 0.0f) {
 			return null;	// Ray is parallel to the plane in which the triangle is
 		}
 
-		final Vector3D v = new Vector3D( p1, p.p );
-		final float r = -(n.x * v.x + n.y * v.y + n.z * v.z ) / b;
+		final Vector3D v = new Vector3D(p1, p.p);
+		final float r = -(n.x * v.x + n.y * v.y + n.z * v.z) / b;
 
 	    if (r < 0.0f || r > p.travelledDistance) {
 	        return null;	// Ray goes away from triangle, or hits further than previously found hit
@@ -115,7 +114,7 @@ public class Triangle implements Object3D {
 	    final Point3D hitPoint = p.p.translateNew( p.d, r );	// intersect point of ray and plane
 
 	    // is hitPoint inside the triangle?
-	    final Vector3D w = new Vector3D( p1, hitPoint );
+	    final Vector3D w = new Vector3D(p1, hitPoint);
 	    final float wu = w.x * v1.x + w.y * v1.y + w.z * v1.z;
 	    final float wv = w.x * v2.x + w.y * v2.y + w.z * v2.z;
 

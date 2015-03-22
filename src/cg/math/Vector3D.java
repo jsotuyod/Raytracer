@@ -4,26 +4,25 @@ public class Vector3D implements Cloneable {
 
 	public float x, y, z;
 
-	public Vector3D(float x, float y, float z) {
+	public Vector3D(final float x, final float y, final float z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
-	public Vector3D(Point3D p) {
+	public Vector3D(final Point3D p) {
 		x = p.x;
 		y = p.y;
 		z = p.z;
 	}
 
-	public Vector3D(Point3D from, Point3D to) {
+	public Vector3D(final Point3D from, final Point3D to) {
 		x = to.x - from.x;
 		y = to.y - from.y;
 		z = to.z - from.z;
 	}
 
 	public final Vector3D normalize() {
-
 		final float d = 1.0f / (float) Math.sqrt(x * x + y * y + z * z);
 
 		x *= d;
@@ -75,7 +74,7 @@ public class Vector3D implements Cloneable {
 
 	public final float getAngle(final Vector3D v) {
 
-		return (float) Math.acos(this.dotProduct(v));
+		return (float) Math.acos(dotProduct(v));
 	}
 
 	public final Vector3D crossProduct(final Vector3D v) {
