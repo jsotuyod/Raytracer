@@ -103,14 +103,14 @@ public class Raycast {
 		return true;
 	}
 
-	private class RenderPart extends Thread{
+	private class RenderPart extends Thread {
 
 		@Override
 		public void run() {
 			int bucketX, bucketY;
 
 			while (true) {
-				synchronized( Raycast.this ) {
+				synchronized (Raycast.this) {
 					if (renderedBoxes == totalBoxes) {
 						return;
 					}

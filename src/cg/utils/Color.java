@@ -45,12 +45,10 @@ public class Color implements Cloneable {
     }
 
     public final int toRGB() {
-        int ir = (int) (r * 255.0f + 0.5f);
-        int ig = (int) (g * 255.0f + 0.5f);
-        int ib = (int) (b * 255.0f + 0.5f);
-        ir = clamp(ir, 0, 255);
-        ig = clamp(ig, 0, 255);
-        ib = clamp(ib, 0, 255);
+        final int ir = clamp((int) (r * 255.0f + 0.5f), 0, 255);
+        final int ig = clamp((int) (g * 255.0f + 0.5f), 0, 255);
+        final int ib = clamp((int) (b * 255.0f + 0.5f), 0, 255);
+
         return (ir << 16) | (ig << 8) | ib;
     }
 
