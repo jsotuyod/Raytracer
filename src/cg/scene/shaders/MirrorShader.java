@@ -22,7 +22,7 @@ public class MirrorShader extends Shader {
 	}
 
 	@Override
-	public Color getPointColor(Collision collision) {
+	public Color getPointColor(final Collision collision) {
 		final float cos = Math.max(-(collision.ray.d.x * collision.normal.x + collision.ray.d.y * collision.normal.y + collision.ray.d.z * collision.normal.z), 0.0f);
 		final float dn = 2.0f * cos;
 
