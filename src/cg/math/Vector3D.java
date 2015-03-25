@@ -79,14 +79,14 @@ public class Vector3D implements Cloneable {
 
 	public final Vector3D crossProduct(final Vector3D v) {
 
-		return new Vector3D( y * v.z - z * v.y,
-							 z * v.x - x * v.z,
-							 x * v.y - y * v.x);
+		return new Vector3D(y * v.z - z * v.y,
+							z * v.x - x * v.z,
+							x * v.y - y * v.x);
 	}
 
 	@Override
 	public Vector3D clone() {
-		return new Vector3D( x, y, z );
+		return new Vector3D(x, y, z);
 	}
 
 	@Override

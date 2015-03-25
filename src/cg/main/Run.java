@@ -200,24 +200,21 @@ public class Run {
 
 			ImageBuffer buffer = new ImageBuffer( resX, resY );
 
-			Raycast rc = new Raycast(showProgress, nCores);
-			rc.setScene( scene );
-			rc.setRenderBuffer(buffer);
+			Raycast rc = new Raycast(showProgress, nCores, scene, buffer);
 
 			long total = 0;
-			for ( int i = 0; i < renderCount; i++ ) {
-				if(debug) {
+			for (int i = 0; i < renderCount; i++) {
+				if (debug) {
 					System.out.println("Rendering[" + (i + 1) + " / " + renderCount + "] ...");
 				}
 				long start = System.currentTimeMillis();
-				if(!rc.render()){
+				if (!rc.render()) {
 					System.err.println("Error rendering, check the camera existance on your input file");
 					System.exit(-1);
 				}
 				long stop = System.currentTimeMillis();
 
 				if (showTime) {
-
 					long duration = stop - start;
 
 					System.out.print("\n[Cores: " + nCores + "] Rendering took " + (duration) + " ms. -> ");
