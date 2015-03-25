@@ -25,9 +25,8 @@ public class DirectionalLight implements Light {
 	}
 
 	@Override
-	public ColorSample getColorSample(Collision collision) {
-
-		if ( dir.dotProduct(collision.normal) < 0.0f ) {
+	public ColorSample getColorSample(final Collision collision) {
+		if (dir.dotProduct(collision.normal) < 0.0f) {
 
 			final Point3D p = collision.hitPoint;
 
@@ -48,14 +47,15 @@ public class DirectionalLight implements Light {
                 	final Vector3D v = new Vector3D(p, p2);
 
         			// Check if there is something hiding the point
-        			final Ray r = new Ray(p, v.clone() );
+        			final Ray r = new Ray(p, v.clone());
         			final Collision test = Registry.getScene().castRay(r);
 
-        			if ( test != null && r.travelledDistance < (p.x - pos.x) * dir.x ) {
+        			if (test != null && r.travelledDistance < (p.x - pos.x) * dir.x) {
+        				// TODO : Color.BLACK?
         				c = new Color();
         			}
 
-                    return new ColorSample( c, c, v );
+                    return new ColorSample(c, c, v);
                 }
             }
 		}

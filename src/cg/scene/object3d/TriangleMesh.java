@@ -39,9 +39,7 @@ public class TriangleMesh implements Object3D {
 
 	public TriangleMesh(Point3D[] points, int[] vertices, Shader shader,
 			UVType uvType, float[] uvs, NormalType normalType, float[] normals, Matrix4 transform) {
-		super();
-
-		if ( shader == null ) {
+		if (shader == null) {
 			throw new NoShaderException();
 		}
 
@@ -106,7 +104,7 @@ public class TriangleMesh implements Object3D {
 			}
 		}
 
-		this.triangles = new SAHKDTree( triangles );
+		this.triangles = new SAHKDTree(triangles);
 
 		collisionMap = new HashMap<Long, Collision>();
 
@@ -124,14 +122,13 @@ public class TriangleMesh implements Object3D {
 
 	@Override
 	public Point3D getHitPoint(final Ray r) {
-
-		if ( bb.hitTest(r) == false ) {
+		if (bb.hitTest(r) == false) {
 			return null;
 		}
 
 		final Collision collision = triangles.hitTest(r);
 
-		if ( collision == null ) {
+		if (collision == null) {
 			return null;
 		}
 

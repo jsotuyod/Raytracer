@@ -19,13 +19,12 @@ public class Plane implements Object3D {
 	private final Point3D p;
 	private final float D;
 
-	public Plane( Point3D p1, Point3D p2, Point3D p3, Shader shader ) {
-		this( p3, new Vector3D( p2, p1 ).crossProduct( new Vector3D( p3, p2 ) ), shader );
+	public Plane(final Point3D p1, final Point3D p2, final Point3D p3, final Shader shader) {
+		this(p3, new Vector3D( p2, p1 ).crossProduct(new Vector3D(p3, p2)), shader);
 	}
 
-	public Plane( Point3D p, Vector3D n, Shader shader ) {
-
-		if ( shader == null ) {
+	public Plane(final Point3D p, final Vector3D n, final Shader shader) {
+		if (shader == null) {
 			throw new NoShaderException();
 		}
 
@@ -34,13 +33,13 @@ public class Plane implements Object3D {
 		this.shader = shader;
 
 		// prevent uAxis from being colineal with normal
-		Vector3D uAxis = new Vector3D( 0.0f, 1.0f, 1.0f + this.n.z );
+		final Vector3D uAxis = new Vector3D(0.0f, 1.0f, 1.0f + this.n.z);
 
 		vAxis = uAxis.crossProduct(this.n).normalize();
 		this.uAxis = this.n.crossProduct(vAxis);
 
 		// Precompute D factor of the general equation.
-		D = this.n.dotProduct( this.p );
+		D = this.n.dotProduct(this.p);
 	}
 
 	@Override
@@ -50,7 +49,6 @@ public class Plane implements Object3D {
 
 	@Override
 	public Point3D getHitPoint(final Ray r) {
-
 		final float aux = n.x * r.d.x + n.y * r.d.y + n.z * r.d.z;
 
 		if (aux == 0.0f) {

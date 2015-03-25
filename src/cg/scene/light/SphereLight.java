@@ -13,7 +13,6 @@ import cg.utils.Color;
 import cg.utils.Registry;
 
 public class SphereLight implements Light {
-
 	private final static float FourPI = 4.0f * (float) Math.PI;
 
 	private final Color color;
@@ -24,8 +23,7 @@ public class SphereLight implements Light {
 	private final float iSamples;
 	private final Random random = new Random();
 
-	public SphereLight(Color color, Point3D pos, float radius, int samples) {
-		super();
+	public SphereLight(final Color color, final Point3D pos, final float radius, final int samples) {
 		this.color = color;
 		this.pos = pos;
 		this.radius = radius;
@@ -36,12 +34,11 @@ public class SphereLight implements Light {
 	}
 
 	@Override
-	public ColorSample getColorSample(Collision collision) {
-
+	public ColorSample getColorSample(final Collision collision) {
 		final Point3D p = collision.hitPoint;
-		final Vector3D d = new Vector3D( p, pos );
+		final Vector3D d = new Vector3D(p, pos);
 
-		if ( d.dotProduct(collision.normal) > 0.0f ) {
+		if (d.dotProduct(collision.normal) > 0.0f) {
 			final float distanceSq = pos.getDistanceSquared(p);
 
 			if ( distanceSq < radiusSq ) {
@@ -60,7 +57,7 @@ public class SphereLight implements Light {
 
 			// v1 can NEVER be collineal with d this way
 			final Vector3D dn = d.clone().normalize();
-			Vector3D v1 = new Vector3D( 0.0f, 1.0f, 1.0f + dn.z );
+			Vector3D v1 = new Vector3D(0.0f, 1.0f, 1.0f + dn.z);
 
 			// Get a direction perpendicular to d, and fine-tune the third one
 			final Vector3D v2 = d.crossProduct(v1).normalize();
@@ -73,7 +70,7 @@ public class SphereLight implements Light {
 			final Scene scene = Registry.getScene();
 
 			// Generate rays for shadows - more samples get better penumbra
-			for ( int i = 0; i < samples; i++ ) {
+			for (int i = 0; i < samples; i++) {
 				// get a vector to a random point in the sphere's plane orthogonal to d
 				dv = v1.scale(random.nextFloat() * 2.0f - 1.0f);
 				dir = d.clone().add(dv,1.0f);

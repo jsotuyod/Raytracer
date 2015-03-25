@@ -63,9 +63,9 @@ public class Triangle implements Object3D {
 		uv_D = uv * iD;
 		vv_D = vv * iD;
 
-		pos = new Point3D( ( p1.x + p2.x + p3.x ) / 3.0f,
-				( p1.y + p2.y + p3.y ) / 3.0f,
-				( p1.z + p2.z + p3.z ) / 3.0f );
+		pos = new Point3D((p1.x + p2.x + p3.x) / 3.0f,
+				(p1.y + p2.y + p3.y) / 3.0f,
+				(p1.z + p2.z + p3.z) / 3.0f);
 
 		this.shader = shader;
 
@@ -111,7 +111,7 @@ public class Triangle implements Object3D {
 
 	    // for a segment, also test if (r > 1.0) => no intersect
 
-	    final Point3D hitPoint = p.p.translateNew( p.d, r );	// intersect point of ray and plane
+	    final Point3D hitPoint = p.p.translateNew(p.d, r);	// intersect point of ray and plane
 
 	    // is hitPoint inside the triangle?
 	    final Vector3D w = new Vector3D(p1, hitPoint);
@@ -150,7 +150,7 @@ public class Triangle implements Object3D {
             return nn.clone();
 
         case VERTEX:
-        	final Vector3D ww = new Vector3D( p1, p );
+        	final Vector3D ww = new Vector3D(p1, p);
         	final float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
         	final float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
 
@@ -160,9 +160,9 @@ public class Triangle implements Object3D {
 
         	final float w = 1.0f - s - t;
 
-        	return new Vector3D( w * n1.x + s * n2.x + t * n3.x,
+        	return new Vector3D(w * n1.x + s * n2.x + t * n3.x,
         			w * n1.y + s * n2.y + t * n3.y,
-        			w * n1.z + s * n2.z + t * n3.z ).normalize();
+        			w * n1.z + s * n2.z + t * n3.z).normalize();
 
         default:
 			throw new UnsupportedInterpolationType();
@@ -179,7 +179,7 @@ public class Triangle implements Object3D {
 			break;
 
 		case VERTEX:
-			final Vector3D ww = new Vector3D( p1, collision.hitPoint );
+			final Vector3D ww = new Vector3D(p1, collision.hitPoint);
 			final float wu = ww.x * v1.x + ww.y * v1.y + ww.z * v1.z;
 			final float wv = ww.x * v2.x + ww.y * v2.y + ww.z * v2.z;
 

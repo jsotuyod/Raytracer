@@ -29,10 +29,8 @@ public class Sphere implements Object3D {
 	private final Matrix4 transform;
 	private final Vector3D vToCenter;
 
-	public Sphere(Point3D pos, float radius, Shader shader, Matrix4 transform) {
-		super();
-
-		if ( shader == null ) {
+	public Sphere(final Point3D pos, final float radius, final Shader shader, final Matrix4 transform) {
+		if (shader == null) {
 			throw new NoShaderException();
 		}
 
@@ -42,19 +40,18 @@ public class Sphere implements Object3D {
 		this.shader = shader;
 
 		this.transform = transform;
-		vToCenter = new Vector3D( pos );
+		vToCenter = new Vector3D(pos);
 	}
 
 	@Override
 	public Point3D getHitPoint(final Ray r) {
-
 		final Vector3D vToP = new Vector3D( pos, r.p );
 
 		float b = -2.0f * (r.d.x * vToP.x + r.d.y * vToP.y + r.d.z * vToP.z);
 
 		final float disc = b * b - 4.0f * (vToP.x * vToP.x + vToP.y * vToP.y + vToP.z * vToP.z - radiusSq);
 
-		if ( disc < 0.0f ) {
+		if (disc < 0.0f) {
 			return null;	// No real solutions => no intersection
 		}
 
@@ -67,7 +64,7 @@ public class Sphere implements Object3D {
 	    } else {
 	        q = (b + distSqrt) * 0.5f;
 
-	        if ( q < 0.0f ) {
+	        if (q < 0.0f) {
 	        	return null;	// Intersection is behind camera
 	        }
 	    }
@@ -104,10 +101,9 @@ public class Sphere implements Object3D {
 
 	@Override
 	public Point2D getUV(final Collision collision) {
-
 		final Vector3D n;
 
-		if ( transform != null ) {
+		if (transform != null) {
 			n = transform.transform(collision.normal.clone()).substract(vToCenter).normalize();
 		} else {
 			n = collision.normal;
@@ -119,7 +115,7 @@ public class Sphere implements Object3D {
 		}
         final float theta = (float) Math.acos(n.z);
 
-        return new Point2D( phi * I_TWO_PI, theta * I_PI);
+        return new Point2D(phi * I_TWO_PI, theta * I_PI);
 	}
 
 	@Override

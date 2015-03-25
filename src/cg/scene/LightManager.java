@@ -1,25 +1,23 @@
 package cg.scene;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import cg.raycasting.Collision;
 
 public class LightManager {
+	private final List<Light> lights;
 
-	protected List<Light> lights;
-	
 	public LightManager() {
-		this.lights = new LinkedList<Light>();
+		lights = new ArrayList<Light>();
 	}
-	
-	public boolean add(Light light) {
-		return lights.add( light );
+
+	public boolean add(final Light light) {
+		return lights.add(light);
 	}
-	
-	public void addLightSamples(Collision collision) {
-		
-		for (Light light : lights) {
+
+	public void addLightSamples(final Collision collision) {
+		for (final Light light : lights) {
 			collision.addLightSample(light.getColorSample(collision));
 		}
 	}

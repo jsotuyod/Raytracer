@@ -9,7 +9,7 @@ public class ColorSample {
 	public final Color diffuse;
 	public final Color specular;
 
-	public ColorSample(Color diffuse, Color specular, Vector3D v) {
+	public ColorSample(final Color diffuse, final Color specular, final Vector3D v) {
 		super();
 		this.diffuse = diffuse;
 		this.specular = specular;

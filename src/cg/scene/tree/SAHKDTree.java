@@ -664,11 +664,11 @@ public class SAHKDTree implements SceneTree {
 
 		private final Object3D objects[];
 
-		public SAHKDLeaf( List<Object3D> objects ) {
+		public SAHKDLeaf(final List<Object3D> objects) {
 
 			this.objects = new Object3D[objects.size()];
 
-			for ( int i = 0; i < this.objects.length; i++ ) {
+			for (int i = 0; i < this.objects.length; i++) {
 				this.objects[i] = objects.get(i);
 			}
 		}

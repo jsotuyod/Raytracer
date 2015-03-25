@@ -11,7 +11,6 @@ import cg.scene.Object3D;
 import cg.utils.Color;
 
 public class Collision {
-
 	final private static float inversePI = 1.0f / (float) Math.PI;
 
 	public final Point3D hitPoint;
@@ -22,8 +21,7 @@ public class Collision {
 	private final List<ColorSample> samples;
 	public final boolean isBehind;
 
-	public Collision(Point3D hitPoint, Object3D object, Vector3D normal, Ray ray) {
-		super();
+	public Collision(final Point3D hitPoint, final Object3D object, final Vector3D normal, final Ray ray) {
 		this.hitPoint = hitPoint;
 		uv = null;
 		this.object = object;
@@ -31,7 +29,7 @@ public class Collision {
 		samples = new ArrayList<ColorSample>();
 
 		// Make sure this is facing forward!
-		if ( ray.d.dotProduct(normal) >= 0.0f ) {
+		if (ray.d.dotProduct(normal) >= 0.0f) {
 			this.normal = normal.scaleSelf(-1.0f);
 			isBehind = true;
 		} else {
@@ -59,28 +57,26 @@ public class Collision {
 	}
 
 	public Point2D getUV() {
-		return uv == null? uv = object.getUV(this) : uv;
+		return uv == null ? uv = object.getUV(this) : uv;
 	}
 
-	public boolean addLightSample(ColorSample colorSample) {
-
-		if ( colorSample == null ) {
-			return true;
+	public void addLightSample(final ColorSample colorSample) {
+		if (colorSample == null) {
+			return;
 		}
 
-		return samples.add(colorSample);
+		samples.add(colorSample);
 	}
 
 	public Color getDiffuse(final Color c) {
-
-		if ( c.isBlack() ) {
+		if (c.isBlack()) {
 			return c;
 		}
 
-		Color color = new Color();
+		final Color color = new Color();
 
-		for (ColorSample cs : samples) {
-			color.madd( cs.dotProduct(normal), cs.diffuse);
+		for (final ColorSample cs : samples) {
+			color.madd(cs.dotProduct(normal), cs.diffuse);
 		}
 
 		return color.mul(c).mul(Collision.inversePI);
