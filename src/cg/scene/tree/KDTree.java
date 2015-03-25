@@ -188,7 +188,7 @@ public class KDTree implements SceneTree {
 		public Collision hitTest(Ray r, float min, float max) {
 
 			float distance = divisionPoint - r.p.x;
-			float thit = distance / r.d.x;
+			float thit = distance * r.id.x;
 
 			if ( thit < 0 || thit >= max ) {
 				// check the half containing the ray pos
@@ -245,7 +245,7 @@ public class KDTree implements SceneTree {
 		public Collision hitTest(Ray r, float min, float max) {
 
 			float distance = divisionPoint - r.p.y;
-			float thit = distance / r.d.y;
+			float thit = distance * r.id.y;
 
 			if ( thit < 0 || thit >= max ) {
 				// check the half containing the ray pos
@@ -302,7 +302,7 @@ public class KDTree implements SceneTree {
 		public Collision hitTest(Ray r, float min, float max) {
 
 			float distance = divisionPoint - r.p.z;
-			float thit = distance / r.d.z;
+			float thit = distance * r.id.z;
 
 			if ( thit < 0 || thit >= max ) {
 				// check the half containing the ray pos

@@ -16,6 +16,8 @@ public class Plane implements Object3D {
 	private final Vector3D n;
 	private final Vector3D uAxis;
 	private final Vector3D vAxis;
+	private final Vector3D iuAxis;
+	private final Vector3D ivAxis;
 	private final Point3D p;
 	private final float D;
 
@@ -37,6 +39,10 @@ public class Plane implements Object3D {
 
 		vAxis = uAxis.crossProduct(this.n).normalize();
 		this.uAxis = this.n.crossProduct(vAxis);
+
+		// Precompute inverses
+		iuAxis = new Vector3D(1.0f / uAxis.x, 1.0f / uAxis.y, 1.0f / uAxis.z);
+		ivAxis = new Vector3D(1.0f / vAxis.x, 1.0f / vAxis.y, 1.0f / vAxis.z);
 
 		// Precompute D factor of the general equation.
 		D = this.n.dotProduct(this.p);
@@ -86,32 +92,32 @@ public class Plane implements Object3D {
 		float u, v;
 		final Point3D p = collision.hitPoint;
 
-		if ( uAxis.x != 0.0f ) {
-			u = ( ( p.x - this.p.x ) / uAxis.x ) % 1.0f;
-		} else if ( uAxis.y != 0.0f ) {
-			u = ( ( p.y - this.p.y ) / uAxis.y ) % 1.0f;
+		if (uAxis.x != 0.0f) {
+			u = ((p.x - this.p.x) * iuAxis.x) % 1.0f;
+		} else if (uAxis.y != 0.0f) {
+			u = ((p.y - this.p.y) * iuAxis.y) % 1.0f;
 		} else {
-			u = ( ( p.z - this.p.z ) / uAxis.z ) % 1.0f;
+			u = ((p.z - this.p.z) * iuAxis.z) % 1.0f;
 		}
 
-		if ( u < 0.0f ) {
+		if (u < 0.0f) {
 			u += 1.0f;
 		}
 
 
-		if ( vAxis.x != 0.0f ) {
-			v = ( ( p.x - this.p.x ) / vAxis.x ) % 1.0f;
-		} else if ( vAxis.y != 0.0f ) {
-			v = ( ( p.y - this.p.y ) / vAxis.y ) % 1.0f;
+		if (vAxis.x != 0.0f) {
+			v = ((p.x - this.p.x) * ivAxis.x) % 1.0f;
+		} else if (vAxis.y != 0.0f ) {
+			v = ((p.y - this.p.y) * ivAxis.y) % 1.0f;
 		} else {
-			v = ( ( p.z - this.p.z ) / vAxis.z ) % 1.0f;
+			v = ((p.z - this.p.z) * ivAxis.z) % 1.0f;
 		}
 
-		if ( v < 0.0f ) {
+		if (v < 0.0f) {
 			v += 1.0f;
 		}
 
-		return new Point2D( u, v );
+		return new Point2D(u, v);
 	}
 
 	@Override
@@ -125,7 +131,7 @@ public class Plane implements Object3D {
 
 	@Override
 	public float getMinXCoord() {
-		if ( n.x != 1.0f ) {
+		if (n.x != 1.0f) {
 			return Float.NEGATIVE_INFINITY;
 		}
 
@@ -134,7 +140,7 @@ public class Plane implements Object3D {
 
 	@Override
 	public float getMaxYCoord() {
-		if ( n.y != 1.0f ) {
+		if (n.y != 1.0f) {
 			return Float.POSITIVE_INFINITY;
 		}
 
@@ -143,7 +149,7 @@ public class Plane implements Object3D {
 
 	@Override
 	public float getMinYCoord() {
-		if ( n.y != 1.0f ) {
+		if (n.y != 1.0f) {
 			return Float.NEGATIVE_INFINITY;
 		}
 
@@ -152,7 +158,7 @@ public class Plane implements Object3D {
 
 	@Override
 	public float getMaxZCoord() {
-		if ( n.z != 1.0f ) {
+		if (n.z != 1.0f) {
 			return Float.POSITIVE_INFINITY;
 		}
 
@@ -161,7 +167,7 @@ public class Plane implements Object3D {
 
 	@Override
 	public float getMinZCoord() {
-		if ( n.z != 1.0f ) {
+		if (n.z != 1.0f) {
 			return Float.NEGATIVE_INFINITY;
 		}
 
