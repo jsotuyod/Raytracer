@@ -45,7 +45,7 @@ public class Sphere implements Object3D {
 
 	@Override
 	public Point3D getHitPoint(final Ray r) {
-		final Vector3D vToP = new Vector3D( pos, r.p );
+		final Vector3D vToP = new Vector3D(pos, r.p);
 
 		float b = -2.0f * (r.d.x * vToP.x + r.d.y * vToP.y + r.d.z * vToP.z);
 

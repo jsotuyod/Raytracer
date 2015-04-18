@@ -679,9 +679,9 @@ public class SAHKDTree implements SceneTree {
 			Object3D collidedObject = null;
 			Point3D hitPoint = null, bestHitPoint = null;
 
-			for (int i = objects.length - 1; i >= 0; i--) {
-				if ((hitPoint = objects[i].getHitPoint(r)) != null) {
-					collidedObject = objects[i];
+			for (final Object3D o : objects) {
+				if ((hitPoint = o.getHitPoint(r)) != null) {
+					collidedObject = o;
 					bestHitPoint = hitPoint;
 				}
 			}
